@@ -4,9 +4,7 @@
 </template>
 
 <script setup>
-import logo from '/assets/logo.svg'
-
-const message = 'Welcome to @fastify/vue!'
+const message = 'Welcome to vertical'
 </script>
 
 <script>

@@ -8,7 +8,7 @@ import viteFastifyVue from '@fastify/vue/plugin'
 const path = fileURLToPath(import.meta.url)
 
 export default {
-  root: join(dirname(path), 'client'),
+  root: join(dirname(path), 'app'),
   plugins: [
     viteVue(),
     viteFastify(),
