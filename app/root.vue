@@ -1,7 +1,10 @@
 <script>
 export { default } from '/:router.vue'
+import { createPinia } from 'pinia'
 
 export function configure ({ app, router }) {
-  // Use this to configure/extend your Vue app and router instance
+  const pinia = createPinia()
+
+  app.use(pinia)
 }
 </script>

@@ -7,14 +7,21 @@
     "build": "npm run build:app && npm run build:server",
     "start": "node server.js",
     "build:app": "vite build --outDir dist/app --ssrManifest",
-    "build:server": "vite build --outDir dist/server --ssr /index.js",
+    "build:server": "vite build --outDir dist/server --ssr /:index.js",
     "lint": "eslint . --ext .js,.jsx --fix"
   },
   "dependencies": {
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/formbody": "^8.0.2",
     "@fastify/one-line-logger": "latest",
+    "@fastify/session": "^11.1.0",
     "@fastify/vite": "8.0.0-alpha.2",
     "@fastify/vue": "1.0.0-alpha.5",
     "fastify": "^5.0.0",
+    "ical.js": "^2.1.0",
+    "lodash-es": "4.17.214.17.21",
+    "pinia": "^2.3.0",
+    "pinia-plugin-persistedstate": "^4.2.0",
     "unihead": "^0.8.0",
     "vue": "^3.5.8",
     "vue-router": "^4.4.5"
@@ -28,10 +35,10 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-vue": "^8.7.1",
-    "vite": "^5.4.7",
     "postcss": "^8.4.31",
     "postcss-nesting": "^12.0.2",
     "postcss-preset-env": "^7.7.1",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "vite": "^5.4.7"
   }
 }
