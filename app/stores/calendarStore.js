@@ -7,36 +7,15 @@ export * from './calendarUtil'
 
 const recurrenceIterMax = 100;
 
-function* monthCoverageRange(month, year, calendar, eventProxy) {
+function* expandRecurrencesFor(event, calendar, month, year) {
+  if (!event.isRecurring())
+    return;
+  
   const mstart = new Date(year, month, 1)
   const mend   = new Date(year, month + 1, 0)
 
-  function* yieldDayRange(start, end) {
-    const startDay = start < mstart ? 1 : start.getDate()
-    const endDay   = end > mend     ? mend.getDate() : end.getDate()
-
-    for (let day = startDay; day <= endDay; day++) {
-      yield day;
-    }
-  }
-
-  const event = toRaw(eventProxy)
   const estart = event.startDate.toJSDate();
-  const eend   = event.endDate.toJSDate();
 
-  // simple if not a recurrence
-  if (!event.isRecurring()) {
-
-    if (eend < mstart || estart > mend) {
-      return
-    }
-
-    yield* yieldDayRange(estart, eend);
-    return
-  }
-  
-  // complicated if it is a recurrance
-  const iterator   = event.iterator();
   const exceptions = calendar.exceptions;
   const exdates    = new Set();
 
@@ -50,147 +29,153 @@ function* monthCoverageRange(month, year, calendar, eventProxy) {
   let next;
   let itercount = 0;
 
-  do {
-    next = iterator.next();
-    if (next) {
-      const occurrence = event.getOccurrenceDetails(next)
-      const ostart     = occurrence.startDate.toJSDate()
-      const oend       = occurrence.endDate.toJSDate()
+  const iterator = event.iterator();
+  while((next = iterator.next()) && itercount < recurrenceIterMax) {
+    const occurrence = event.getOccurrenceDetails(next)
+    const ostart     = occurrence.startDate.toJSDate()
+    const oend       = occurrence.endDate.toJSDate()
 
-      // we're done if we've passed the end of the month
-      if (ostart > mend) break;
+    // we're done if we've passed the end of the month
+    if (ostart > mend) break;
 
-      // skip if we're excluded
-      if (exdates.has(ostart.getTime())) continue;
+    // skip if we're excluded
+    if (exdates.has(ostart.getTime())) continue;
 
-      // skip if there's an exception, we'll use those instead
-      if (some(exceptions, ex => ex.uid === event.uid && toRaw(ex.recurrenceId).toJSDate().getTime() === ostart.getTime())) continue;
+    // skip if there's an exception, we'll use those instead
+    if (some(exceptions, ex => ex.uid === event.uid && toRaw(ex.recurrenceId).toJSDate().getTime() === ostart.getTime())) continue;
 
-      // if the occurence overlaps, yield it
-      if (oend >= mstart && ostart <= mend && ostart >= estart) {
-        yield* yieldDayRange(ostart, oend)
+    // if the occurence overlaps, yield it
+    if (oend >= mstart && ostart <= mend && ostart >= estart) {
+      const oevent = makeEventFromICS(event)
+      yield {
+        ...oevent,
+        startDate: occurrence.startDate.toJSDate(),
+        endDate: occurrence.endDate.toJSDate(),
+        calendarId: oevent.calendarId,
+        recurrenceUid: oevent.uid,
       }
     }
 
     itercount++;
-  } while (next && itercount < recurrenceIterMax)
+  }
 
   if (itercount === recurrenceIterMax)
     console.warn("bailed out of occurrence iterator after", itercount, "iterations, event:", event, "next occurence:", next)
 }
 
+let internalUid = 0
+function makeInternalUid() {
+  internalUid = internalUid + 1
+  return `internal-uid-${internalUid}`
+}
+
+async function makeCalendarFromICS(file) {
+  const content = await file.text()
+  const jcal    = ICAL.parse(content)
+  const calcomp = new ICAL.Component(jcal)
+  const vevents = calcomp.getAllSubcomponents("vevent")
+  const mapped  = vevents.map(v => new ICAL.Event(v)).filter(c => c !== null);
+
+  const [exceptions, events] = partition(mapped, e => e.isRecurrenceException())
+  return {
+    id: file.name,
+    name: calcomp.getFirstPropertyValue('x-wr-calname') || file.name,
+    events,
+    exceptions
+  }
+}
+
+function makeEventFromICS(event) {
+  try {
+    let startDate = event.startDate.toJSDate()
+    let endDate   = event.endDate.toJSDate()
+
+    // adjust end date, ical does all day events as midnight the next day
+    if (event.endDate.isDate && endDate > startDate) {
+      endDate = new Date(endDate.getTime() - 1)
+    }
+
+    return {
+      uid:         event.uid || makeInternalUid(),       
+      name:        event.summary,
+      startDate,
+      endDate,
+    }
+  }
+  catch (e) {
+    return null;
+  }
+}
+
 export const useCalendarStore = defineStore('calendarStore', () => {
   const today = new Date()
 
-  const calendars = ref([])
-  const errors = ref([])
+  const currentMonth    = ref(today.getMonth())
+  const currentYear     = ref(today.getFullYear())
+  const currentCacheKey = computed(() => `${currentMonth.value}-${currentYear.value}`)
 
-  const currentMonth  = ref(today.getMonth())
-  const currentYear   = ref(today.getFullYear())
+  const localEvents     = ref(new Set())
+  const icsCalendars    = ref(new Set())
 
-  const currentEvents = computed(() => {
-    const eventsByDay = new Map();
+  const expandedCache   = new Map()
 
-    for (const calendar of calendars.value) {
-      for (const event of [
-        ...calendar.events,
-        ...calendar.exceptions
-      ]) {
-        const rawEvent = toRaw(event);
-        const mapped = {
-          uid:         rawEvent.uid,       
-          name:        rawEvent.summary,
-          description: rawEvent.description,
-          startDate:   rawEvent.startDate.toJSDate(),
-          endDate:     rawEvent.endDate.toJSDate(),
-        }
+  const expandedEvents  = computed(() => {
+    if (!expandedCache.has(currentCacheKey.value)) {
+      const events = new Set()
+      for (const calendar of icsCalendars.value) {
+        for (const icsEvent of [...calendar.events, ...calendar.exceptions]) {
+          const rawICSEvent = toRaw(icsEvent)
+          const event       = makeEventFromICS(rawICSEvent)
 
-        for (const day of monthCoverageRange(currentMonth.value, currentYear.value, calendar, event)) {
-          if (!eventsByDay.has(day)) {
-            eventsByDay.set(day, [])
+          events.add({ ...event, calendarId: calendar.id })
+          for (const recurrence of expandRecurrencesFor(rawICSEvent, calendar, currentMonth.value, currentYear.value)) {
+            events.add(recurrence)
           }
-
-          eventsByDay.get(day).push(mapped);
-        }
-      }
-    }
-
-    return Object.fromEntries(eventsByDay)
-  });
-
-  function readICSBuffer(filename, content) {
-    const jcal = ICAL.parse(content)
-    const comp = new ICAL.Component(jcal)
-
-    const makeEvent = (vevent) => {
-      const event = new ICAL.Event(vevent)
-
-      try {
-        const startDate = event.startDate.toJSDate();
-        const endDate   = event.endDate.toJSDate();
-
-        // adjust end of day for all day events
-        if (event.endDate.isDate && endDate > startDate) {
-          const newEndDate = new Date(endDate.getTime() - 1)
-          event.endDate    = ICAL.Time.fromJSDate(newEndDate)
-        }
-
-        return event;
-      }
-      catch (e) {
-        return null;
-      }
-    }
-
-    const comps                = comp.getAllSubcomponents("vevent").map(makeEvent);
-    const withValidDates       = comps.filter(c => c !== null)
-    const [exceptions, events] = partition(withValidDates, e => e.isRecurrenceException())
-
-    return {
-      filename,
-      name:        comp.getFirstPropertyValue('x-wr-calname') || filename,
-      description: comp.getFirstPropertyValue('x-wr-caldesc') || null,
-
-      events,
-      exceptions
-    }
-  }
-
-  function readICSFile(file) {
-    return new Promise((resolve, reject) => {
-      if (!file) {
-        reject(new Error("no file selected"))
-        return
-      }
-
-      const reader = new FileReader();
-      reader.onerror = reject
-      reader.onload = (e) => {
-        try {
-          const content = e.target.result;
-          const result  = readICSBuffer(file.name, content);
-
-          calendars.value.push(result)
-          resolve(result)
-        }
-        catch (e) {
-          reject(e)
         }
       };
 
-      reader.readAsText(file)
-    });
+      expandedCache.set(currentCacheKey.value, events);
+    }
+
+    return expandedCache.get(currentCacheKey.value)
+  })
+
+  const currentEvents = computed(() => {
+    const result = {}
+    const mstart = new Date(currentYear.value, currentMonth.value, 1)
+    const mend   = new Date(currentYear.value, currentMonth.value + 1, 0)
+    
+    for (const event of [...localEvents.value, ...expandedEvents.value]) {
+      console.log("getting event: ", event)
+
+      if (event.endDate < mstart || event.startDate > mend)
+        continue;
+
+      const startDay = event.startDate < mstart ? 1 : event.startDate.getDate()
+      const endDay   = event.endDate > mend     ? mend.getDate() : event.endDate.getDate()
+
+      for (let day = startDay; day <= endDay; day++) {
+        result[day] = result[day] || []
+        result[day].push(event)
+      }
+    }
+
+    return result
+  })
+
+  async function importICSFile(file) {
+    const calendar = await makeCalendarFromICS(file)
+
+    expandedCache.clear();
+    icsCalendars.value.add(calendar)
   }
 
   return {
-    calendars,
-    errors,
-
+    icsCalendars,
+    localEvents,
+    currentEvents,
     currentMonth,
     currentYear,
-    currentEvents,
-
-    readICSBuffer,
-    readICSFile,
+    importICSFile,
   }
 })
