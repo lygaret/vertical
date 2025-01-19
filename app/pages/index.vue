@@ -1,6 +1,10 @@
+<script>
+  export const clientOnly = true
+</script>
+
 <script setup>
   import { ref } from 'vue'
-  import { MonthOptions, YearOptions, useCalendarStore } from '../stores/calendarStore'
+  import { MonthOptions, YearOptions, useCalendarStore } from '@/stores/calendarStore'
 
   const store = useCalendarStore()
 
@@ -35,7 +39,4 @@
   <input type="file" accept=".ics" @change="fileInput = $event.target.files[0]"/>
   <hr>
   <pre>{{ JSON.stringify(store.currentEvents, null, 2) }}</pre>
-  <pre>{{ JSON.stringify(store.icsCalendars, null, 2) }}</pre>
-  <pre>{{ JSON.stringify(store.expandedEvents, null, 2) }}</pre>
-  <pre>{{ JSON.stringify(store.localEvents, null, 2) }}</pre>
 </template>

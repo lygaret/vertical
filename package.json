@@ -11,6 +11,7 @@
     "lint": "eslint . --ext .js,.jsx --fix"
   },
   "dependencies": {
+    "@cheprasov/jsbt": "^1.2.3",
     "@fastify/cookie": "^11.0.2",
     "@fastify/formbody": "^8.0.2",
     "@fastify/one-line-logger": "latest",
@@ -19,7 +20,7 @@
     "@fastify/vue": "1.0.0-alpha.5",
     "fastify": "^5.0.0",
     "ical.js": "^2.1.0",
-    "lodash-es": "4.17.214.17.21",
+    "lodash-es": "^4.17.21",
     "pinia": "^2.3.0",
     "pinia-plugin-persistedstate": "^4.2.0",
     "unihead": "^0.8.0",
