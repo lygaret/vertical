@@ -4,11 +4,24 @@
 </script>
 
 <script setup>
+  import { Sidebar, SidebarContent, SidebarHeader, SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
   import { useCalendarStore } from '@/stores/calendarStore'
 
   const store = useCalendarStore()
 </script>
 
 <template>
-  <pre>{{ JSON.stringify(store.currentEvents, null, 2) }}</pre>
+  <SidebarProvider>
+    <SidebarInset>
+      <pre>{{ JSON.stringify(store.currentEvents, null, 2) }}</pre>
+    </SidebarInset>
+    <Sidebar side="right">
+      <SidebarHeader>
+        Header
+      </SidebarHeader>
+      <SidebarContent>
+        Content
+      </SidebarContent>
+    </Sidebar>
+  </SidebarProvider>
 </template>
