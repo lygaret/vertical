@@ -5,22 +5,26 @@
 
 <script setup>
   import { Sidebar, SidebarContent, SidebarHeader, SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-  import { useCalendarStore } from '@/stores/calendarStore'
 
-  const store = useCalendarStore()
+  import { BrandBadge } from '@/components/app'
+  import { CalendarPreview, ImportICSSidebarGroup, MonthSelectorSidebarGroup } from '@/components/app/calendar'
 </script>
 
 <template>
-  <SidebarProvider>
+  <div class="w-[12in] h-[18in] hidden print:block m-0 p-0">
+    <CalendarPreview />
+  </div>
+  <SidebarProvider class="print:hidden">
     <SidebarInset>
-      <pre>{{ JSON.stringify(store.currentEvents, null, 2) }}</pre>
+      <CalendarPreview />
     </SidebarInset>
-    <Sidebar side="right">
+    <Sidebar side="right" class="print:hidden">
       <SidebarHeader>
-        Header
+        <BrandBadge />
       </SidebarHeader>
       <SidebarContent>
-        Content
+        <MonthSelectorSidebarGroup />
+        <ImportICSSidebarGroup />
       </SidebarContent>
     </Sidebar>
   </SidebarProvider>

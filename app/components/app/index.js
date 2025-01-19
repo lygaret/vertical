@@ -1,0 +1,1 @@
+export { default as BrandBadge } from './BrandBadge.vue';

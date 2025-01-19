@@ -173,6 +173,22 @@ export const useCalendarStore = defineStore('calendarStore', () => {
     return result
   })
 
+  const currentDays = computed(() => {
+    const last = new Date(currentYear.value, currentMonth.value + 1, 1);
+    const days = [];
+
+    const events = currentEvents.value;
+    for (let day = 1; ;day++) {
+      const date = new Date(currentYear.value, currentMonth.value, day);
+      if (date >= last)
+        break;
+
+      days.push({ date, weekday: date.getDay(), events: events[day] || [] });
+    }
+
+    return days;
+  })
+
   async function importICSFile(file) {
     const calendar = await makeCalendarFromICS(file)
     if (icsCalendars.value.has(calendar.id)) {
@@ -183,14 +199,29 @@ export const useCalendarStore = defineStore('calendarStore', () => {
     icsCalendars.value.set(calendar.id, calendar)
   }
 
+  async function previewICSFile(file) {
+    const content = await file.text()
+    const jcal    = ICAL.parse(content)
+    const calcomp = new ICAL.Component(jcal)
+
+    return {
+      file,
+      name: calcomp.getFirstPropertyValue('x-wr-calname') || file.name,
+      color: calcomp.getFirstPropertyValue('color') || '#4477FF',
+    }
+  }
+
   return {
     currentEvents,
+
+    currentDays,
     currentMonth,
     currentYear,
 
     icsCalendars,
     localEvents,
 
+    previewICSFile,
     importICSFile,
   }
 }, {
