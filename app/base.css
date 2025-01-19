@@ -1,64 +1,78 @@
-/*
-Optional:
-https://tailwindcss.com/docs/preflight
 @tailwind base;
-*/
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --color-base: #f1f1f1;
-  --color-highlight: #ff80ff;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --ring: 0 0% 3.9%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --ring: 0 0% 83.1%;
+  }
 }
-html {
-  background: #222;
-}
-#root {
-  width:  800px;
-  margin:  0 auto;
-  padding: 2em;
-  box-shadow: 5px 5px 30px rgba(0,0,0,0.4);
-  border-radius: 10px;
-  background-color: rgba(255, 255, 255, 0.1);
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: var(--color-base);
-  margin-top: 60px;
-  & a {
-    color: var(--color-highlight);
-    text-decoration: none;
-    font-weight: bold;
-    border-bottom: 1px solid var(--color-highlight);
-    &:hover {
-      color: #ffde00;
-    }
-    &:active {
-      color: #eecf00
-    }
+
+@layer base {
+  * {
+    @apply border-border;
   }
-  & p {
-    font-size: 1.2em;
-  }
-  & ul {
-    & li {
-      &:not(:last-child) {
-        margin-bottom: 0.5em;
-      }
-      break-inside: avoid;
-      font-size: 1em;
-    }
-  }
-  & code {
-    color: #ffde00;
-    font-weight: bold;
-    font-family: 'Consolas', 'Andale Mono', monospace;
-    font-size: 0.9em;
-  }
-  & img {
-    width: 14em;
-  }
-  & button {
-    margin: 0 0.5em;
+  body {
+    @apply bg-background text-foreground;
   }
 }
