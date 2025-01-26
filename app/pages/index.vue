@@ -4,28 +4,12 @@
 </script>
 
 <script setup>
-  import { useState } from '/:hooks.js'
-  import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+  import { cn } from '@/lib/utils';
 
-  import { BrandBadge } from '@/components/app'
-  import { CalendarPreview, ImportICSSidebarGroup, MonthSelectorSidebarGroup } from '@/components/app/calendar'
-
-  import FontPicker from '@/components/app/editor/FontFamilyPicker.vue'
-import { cn } from '@/lib/utils';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { Icon } from 'lucide-vue-next';
-import { ColorWheelIcon, FontBoldIcon, FontItalicIcon, FontRomanIcon, FontStyleIcon } from '@radix-icons/vue';
-import { NumberField, NumberFieldContent, NumberFieldDecrement, NumberFieldIncrement, NumberFieldInput } from '@/components/ui/number-field';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { useCssVariables } from '@/stores/cssVariableStore';
-import { onMounted, onUnmounted, provide, ref, useTemplateRef } from 'vue';
-import FontEditor from '@/components/app/editor/FontEditor.vue';
-
-  const { googleFonts } = useState()
-
-  const calendarEl = useTemplateRef('calendar')
-  provide('calendarEl', calendarEl)
+  import { BrandBadge } from '@/components/app';
+  import { CalendarPreview, ImportICSSidebarGroup, MonthSelectorSidebarGroup } from '@/components/app/calendar';
+  import FontEditor from '@/components/app/editor/FontEditor.vue';
+  import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 </script>
 
 <template>

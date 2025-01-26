@@ -22,6 +22,7 @@ const store = useCalendarStore();
           <SelectGroup>
             <SelectItem
               v-for="month_opt in MonthOptions"
+              :key="month_opt.value"
               :value="String(month_opt.value)"
             >
               {{ month_opt.label }}
@@ -40,6 +41,7 @@ const store = useCalendarStore();
           <SelectGroup>
             <SelectItem
               v-for="year_opt in YearOptions"
+              :key="year_opt.value"
               :value="String(year_opt.value)"
             >
               {{ year_opt.label }}

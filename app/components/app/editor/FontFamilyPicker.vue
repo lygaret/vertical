@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import { useState } from '/:hooks.js';
 
 import { ListboxContent, ListboxFilter, ListboxItem, ListboxRoot, ListboxVirtualizer } from 'radix-vue';
@@ -20,7 +20,7 @@ const settings = useSettingsStore();
 const { googleFonts } = useState();
 
 const props = defineProps({
-  style: { type: Object, required: false },
+  style: { type: Object, required: false, default: null },
 });
 
 const selectedFont = defineModel('font', { type: Object, default: null });
@@ -102,31 +102,54 @@ watchEffect(() => {
         role="combobox" 
         class="font-inherit weight-inherit style-inherit grow justify-between"
       >
-        <FontFamilyPreview v-if="selectedFont" :font="selectedFont" :style="props.style" />
+        <FontFamilyPreview
+          v-if="selectedFont"
+          :font="selectedFont"
+          :style="props.style"
+        />
         <span v-else>Pick Font</span>
         <MagnifyingGlassIcon class="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>
     </PopoverTrigger>
-    <PopoverContent :class="cn($style.PopoverContent, 'p-0')" side="bottom" :side-offset="0">
+    <PopoverContent
+      :class="cn($style.PopoverContent, 'p-0')"
+      side="bottom"
+      :side-offset="0"
+    >
       <ListboxRoot v-model="selectedFont">
-        <ListboxFilter as="div" class="w-full flex items-center justify-between rounded-sm focus-within:outline-none focus-within:ring-1 focus-within:ring-ring">
-            <Input v-model="searchTerm" placeholder="Search fonts..." class="grow" :show-border="false" :show-focus-ring="false" />
-            <Select v-model="searchCategory">
-              <SelectTrigger class="text-xs basis-[25%] grow-0 shadow-none border-none">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem :value="null">All</SelectItem>
-                  <SelectItem v-for="category of categories" :value="category">
-                    {{ category }}
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+        <ListboxFilter
+          as="div"
+          class="w-full flex items-center justify-between rounded-sm focus-within:outline-none focus-within:ring-1 focus-within:ring-ring"
+        >
+          <Input
+            v-model="searchTerm"
+            placeholder="Search fonts..."
+            class="grow"
+            :show-border="false"
+            :show-focus-ring="false"
+          />
+          <Select v-model="searchCategory">
+            <SelectTrigger class="text-xs basis-[25%] grow-0 shadow-none border-none">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem :value="null">
+                  All
+                </SelectItem>
+                <SelectItem
+                  v-for="category of categories"
+                  :key="category"
+                  :value="category"
+                >
+                  {{ category }}
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </ListboxFilter>
         <ListboxContent :class="cn($style.ListboxContent, 'overflow-y-auto overflow-x-hidden')">
-          <FontGoogleConsent class="bg-muted b-primary bb-1"/>
+          <FontGoogleConsent class="bg-muted b-primary bb-1" />
           <ListboxVirtualizer
             v-slot="{ option }"
             :options="filteredFonts"
@@ -134,7 +157,11 @@ watchEffect(() => {
             :text-content="(opt) => opt.family"
             class="max-h-[480px]"
           >
-            <ListboxItem :key="option.family" :value="option" class="w-full relative flex cursor-default select-none items-center rounded-sm px-4 py-1.5 text-sm outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+            <ListboxItem
+              :key="option.family"
+              :value="option"
+              class="w-full relative flex cursor-default select-none items-center rounded-sm px-4 py-1.5 text-sm outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+            >
               <FontFamilyPreview :font="option" />
             </ListboxItem>
           </ListboxVirtualizer>

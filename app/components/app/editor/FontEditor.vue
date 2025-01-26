@@ -1,9 +1,8 @@
 <script setup>
 import { useCssVar } from '@vueuse/core';
-import { computed, defineProps, inject, ref, watchEffect } from 'vue';
+import { computed, defineProps, ref, watchEffect } from 'vue';
 import FontFamilyPicker from './FontFamilyPicker.vue';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { FontBoldIcon, FontItalicIcon, FontRomanIcon } from '@radix-icons/vue';
+import { FontBoldIcon, FontItalicIcon } from '@radix-icons/vue';
 import { Input } from '@/components/ui/input';
 import { NumberField, NumberFieldContent, NumberFieldDecrement, NumberFieldIncrement, NumberFieldInput } from '@/components/ui/number-field';
 import { Toggle } from '@/components/ui/toggle';
@@ -41,17 +40,32 @@ watchEffect(() => size.value   = `${selectedSize.value}pt`);
 <template>
   <div class="flex flex-col space-y-2">
     <div class="flex">
-      <FontFamilyPicker v-model:font="selectedFont" :style="previewStyle"/>
+      <FontFamilyPicker
+        v-model:font="selectedFont"
+        :style="previewStyle"
+      />
     </div>
     <div class="flex flex-row space-x-4">
-      <Input type="color" class="w-12 p-1" v-model="color" />
-      <Toggle v-model:pressed="selectedBold" class="w-8 p-1">
+      <Input
+        v-model="color"
+        type="color"
+        class="w-12 p-1"
+      />
+      <Toggle
+        v-model:pressed="selectedBold"
+        class="w-8 p-1"
+      >
         <FontBoldIcon />
       </Toggle>
-      <Toggle v-model:pressed="selectedItalic" class="w-8 p-1">
+      <Toggle
+        v-model:pressed="selectedItalic"
+        class="w-8 p-1"
+      >
         <FontItalicIcon />
       </Toggle>
-      <div class="grow">&nbsp;</div>
+      <div class="grow">
+&nbsp;
+      </div>
       <NumberField v-model="selectedSize">
         <NumberFieldContent>
           <NumberFieldDecrement />

@@ -1,6 +1,6 @@
 <script setup>
 import { cn } from '@/lib/utils';
-import { defineProps, onMounted, ref, onUnmounted, watch, watchEffect } from 'vue';
+import { defineProps, onMounted, ref, onUnmounted, watch } from 'vue';
 
 const props = defineProps({
   font: {
@@ -9,7 +9,8 @@ const props = defineProps({
   },
   style: {
     type: Object,
-    required: false
+    required: false,
+    default: null
   }
 });
 

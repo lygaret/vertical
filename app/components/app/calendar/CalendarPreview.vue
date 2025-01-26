@@ -1,6 +1,5 @@
 <script setup>
   import { useCssModule } from 'vue';
-
   import { useCalendarStore, monthName, weekdayName } from "@/stores/calendarStore"
 
   const store = useCalendarStore();
@@ -27,6 +26,7 @@
     <div :class="$style.date_grid">
       <div
         v-for="day in store.currentDays"
+        :key="day.date.getDate()"
         :class="[$style.date_row, weekdayClass(day.date)]"
       >
         <div :class="$style.col_date">

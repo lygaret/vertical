@@ -1,1 +1,7 @@
 dist
+vendor
+
+app/components/ui
+
+server.js
+tailwind.config.js

@@ -13,7 +13,7 @@ const settings = useSettingsStore();
   <Label class="flex items-center w-full p-4 space-x-2 no-select">
     <span>Allow Google Fonts?</span>
     <Checkbox v-model:checked="settings.allowGoogle" />
-    <span class="grow no-select">&nbsp</span>
+    <span class="grow no-select">&nbsp;</span>
     <Tooltip>
       <TooltipTrigger>
         <InfoCircledIcon class="self-end" />

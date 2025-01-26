@@ -4,6 +4,11 @@
     'eslint:recommended',
     'plugin:vue/vue3-recommended'
   ],
+  parser: 'vue-eslint-parser',
   rules: {
+    'vue/multi-word-component-names': 'off',
+  },
+  env: {
+    'vue/setup-compiler-macros': true
   }
 }
