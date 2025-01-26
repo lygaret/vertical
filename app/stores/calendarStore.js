@@ -1,17 +1,39 @@
 import { ref, computed, toRaw } from 'vue';
 import { defineStore } from 'pinia';
 import { partition, some } from 'lodash-es';
-
 import ICAL from 'ical.js';
-
 import { JSBT } from '@cheprasov/jsbt/src/JSBT';
-
-export * from './calendarUtil'
 
 let internalUid = 0
 function makeInternalUid(prefix) {
   internalUid = internalUid + 1
   return `${prefix}-uid-${internalUid}`
+}
+
+export function monthName(monthIdx, style = 'long') {
+  const date = new Date(2023, monthIdx, 1);
+  return date.toLocaleDateString('en-US', { month: style });
+}
+
+export function weekdayName(dayIndex, style = 'long') {
+  // jan 1, 2023 was a sunday, so adding index gives us a valid weekday
+  const date = new Date(2023, 0, 1 + dayIndex);
+  return date.toLocaleDateString('en-US', { weekday: style });
+}
+
+export const YearOptions = [
+  { label: '2024', value: 2024 },
+  { label: '2025', value: 2025 },
+  { label: '2026', value: 2026 },
+  { label: '2027', value: 2027 },
+  { label: '2028', value: 2028 },
+  { label: '2029', value: 2029 },
+  { label: '2030', value: 2030 },
+];
+
+export const MonthOptions = [];
+for (let i = 0; i < 12; i++) {
+  MonthOptions.push({ label: monthName(i), value: i });
 }
 
 async function makeCalendarFromICS(file) {
@@ -144,7 +166,7 @@ export const useCalendarStore = defineStore('calendarStore', () => {
             events.add({ ...recurrence, calendarId: calendar.id })
           }
         }
-      };
+      }
 
       expandedCache.set(currentCacheKey.value, events);
     }

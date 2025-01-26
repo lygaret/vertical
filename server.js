@@ -5,6 +5,36 @@ import fastifySession from '@fastify/session'
 import fastifyCookie from '@fastify/cookie'
 import fastifyFormbody from '@fastify/formbody'
 
+async function loadLocalFonts() {
+  return [
+    { family: 'sans-serif', category: 'local' },
+    { family: 'serif', category: 'local' },
+    { family: 'cursive', category: 'local' },
+    { family: 'monospace', category: 'local' },
+  ]
+}
+
+async function loadGoogleFonts() {
+  try {
+    const apikey   = process.env.GOOGLE_API_KEY
+    const response = await fetch(
+      `https://www.googleapis.com/webfonts/v1/webfonts?key=${apikey}`
+    );
+
+    const data  = await response.json();
+    const fonts = data.items.map((font) => ({
+      category: font.category,
+      family:   font.family,
+      menu:     font.menu
+    }))
+
+    return fonts
+  } catch (error) {
+    console.error("Failed to fetch fonts:", error);
+    throw error;
+  }
+}
+
 const server = fastify({
   logger: {
     transport: {
@@ -12,6 +42,9 @@ const server = fastify({
     }
   }
 })
+
+server.decorate('googleFonts', await loadGoogleFonts())
+server.decorate('defaultFonts', await loadLocalFonts())
 
 server.register(fastifyFormbody)
 server.register(fastifyCookie)
@@ -23,4 +56,4 @@ await server.register(fastifyVite, {
 })
 
 await server.vite.ready()
-await server.listen({ port: 3000 })
+await server.listen({ port: 3001 })

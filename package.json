@@ -3,12 +3,12 @@
   "description": "The vue-base starter template for @fastify/vue",
   "type": "module",
   "scripts": {
-    "dev": "node server.js --dev",
+    "dev": "dotenvx run -- node server.js --dev",
     "build": "npm run build:app && npm run build:server",
-    "start": "node server.js",
+    "start": "dotenvx run -- node server.js",
     "build:app": "vite build --outDir dist/app --ssrManifest",
     "build:server": "vite build --outDir dist/server --ssr /:index.js",
-    "lint": "eslint . --ext .js,.jsx --fix"
+    "lint": "eslint . --ext .js,.jsx,.vue --fix"
   },
   "dependencies": {
     "@cheprasov/jsbt": "^1.2.3",
@@ -16,8 +16,9 @@
     "@fastify/formbody": "^8.0.2",
     "@fastify/one-line-logger": "latest",
     "@fastify/session": "^11.1.0",
-    "@fastify/vite": "8.0.0-alpha.2",
-    "@fastify/vue": "1.0.0-alpha.5",
+    "@fastify/vite": "./vendor/fastify-vite/packages/fastify-vite",
+    "@fastify/vue": "./vendor/fastify-vite/packages/fastify-vue",
+    "@iconify/vue": "^4.3.0",
     "@radix-icons/vue": "^1.0.0",
     "@vee-validate/zod": "^4.15.0",
     "@vueuse/core": "^12.4.0",
@@ -40,6 +41,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.16.0",
+    "@dotenvx/dotenvx": "^1.33.0",
     "@vitejs/plugin-vue": "^4.5.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^7.32.0",

@@ -30,8 +30,17 @@ async function importFile() {
   <SidebarGroup>
     <SidebarGroupLabel>Import ICS</SidebarGroupLabel>
     <div class="flex flex-col space-y-2 items-end">
-      <Input type="file" accepts=".ics" @change="readFile($event)" />
-      <Button size="sm" @click="importFile()">Import</Button>
+      <Input
+        type="file"
+        accepts=".ics"
+        @change="readFile($event)"
+      />
+      <Button
+        size="sm"
+        @click="importFile()"
+      >
+        Import
+      </Button>
     </div>
     <div class="flex flex-row">
       <div v-for="[id, calendar] of store.icsCalendars">

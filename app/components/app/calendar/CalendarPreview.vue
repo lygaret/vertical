@@ -1,8 +1,7 @@
 <script setup>
   import { useCssModule } from 'vue';
 
-  import { useCalendarStore } from "@/stores/calendarStore"
-  import { monthName, weekdayName } from "@/stores/calendarUtil"
+  import { useCalendarStore, monthName, weekdayName } from "@/stores/calendarStore"
 
   const store = useCalendarStore();
   const style = useCssModule();
@@ -18,35 +17,52 @@
 </script>
 
 <template>
-    <div :class="$style.page">
-      <h2 :class="$style.year">{{ store.currentYear }}</h2>
-      <h1 :class="$style.month">{{ monthName(store.currentMonth) }}</h1>
-      <div :class="$style.date_grid">
-        <div v-for="day in store.currentDays" :class="[$style.date_row, weekdayClass(day.date)]">
-          <div :class="$style.col_date">{{ day.date.getDate() }}</div>
-          <div :class="$style.col_weekday">{{ weekdayName(day.date.getDay()) }}</div>
-          <div :class="$style.col_content">
-            <pre>{{ day.events.map(e => e.name).join(", ") }}</pre>
-          </div>
+  <div :class="$style.page">
+    <h2 :class="$style.year">
+      {{ store.currentYear }}
+    </h2>
+    <h1 :class="$style.month">
+      {{ monthName(store.currentMonth) }}
+    </h1>
+    <div :class="$style.date_grid">
+      <div
+        v-for="day in store.currentDays"
+        :class="[$style.date_row, weekdayClass(day.date)]"
+      >
+        <div :class="$style.col_date">
+          {{ day.date.getDate() }}
+        </div>
+        <div :class="$style.col_weekday">
+          {{ weekdayName(day.date.getDay()) }}
+        </div>
+        <div :class="$style.col_content">
+          <pre>{{ day.events.map(e => e.name).join(", ") }}</pre>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <style lang="css" global>
   :root {
-    --calendar_page_color: #037;
+    --calendar_page_color: #003377;
     --calendar_page_background-color: transparent;
     --calendar_page_font-size: 14pt;
     --calendar_page_padding: 1em 2em;
 
     --calendar_year_font-family: sans-serif;
     --calendar_year_font-size: 14pt;
+    --calendar_year_font-weight: normal;
+    --calendar_year_font-style: normal;
+    --calendar_year_color: var(--calendar_page_color);
     --calendar_year_text-align: right;
     --calendar_year_margin: 0;     
  
     --calendar_month_font-family: sans-serif;
     --calendar_month_font-size: 24pt;
+    --calendar_month_font-weight: normal;
+    --calendar_month_font-style: normal;
+    --calendar_month_color: var(--calendar_page_color);
     --calendar_month_text-align: right;     
     --calendar_month_margin: 0;     
 
@@ -92,22 +108,34 @@
     font-size: var(--calendar_page_font-size);
   }
 
+  @media print {
+    @page {
+      size: 12in 18in;
+    }
+  }
+
   h1, h2 {
     flex: 0;
   }
 
   h1.month {
     line-height: 1em;
+    color: var(--calendar_month_color);
     font-family: var(--calendar_month_font-family);
     font-size: var(--calendar_month_font-size);
+    font-weight: var(--calendar_month_font-weight);
+    font-style: var(--calendar_month_font-style);
     text-align: var(--calendar_month_text-align);
     margin: var(--calendar_month_margin);
   }
 
   h2.year {
     line-height: 1em;
+    color: var(--calendar_year_color);
     font-family: var(--calendar_year_font-family);
     font-size: var(--calendar_year_font-size);
+    font-weight: var(--calendar_year_font-weight);
+    font-style: var(--calendar_year_font-style);
     text-align: var(--calendar_year_text-align);
     margin: var(--calendar_year_margin);
   }

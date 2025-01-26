@@ -1,0 +1,4 @@
+[submodule "vendor/fastify-vite"]
+	path = vendor/fastify-vite
+	url = git@github.com:lygaret/fastify-vite
+	branch = dev
