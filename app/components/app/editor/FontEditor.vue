@@ -1,11 +1,13 @@
 <script setup>
-import { useCssVar } from '@vueuse/core';
-import { computed, defineProps, ref, watchEffect } from 'vue';
-import FontFamilyPicker from './FontFamilyPicker.vue';
+import { computed, defineProps } from 'vue';
 import { FontBoldIcon, FontItalicIcon } from '@radix-icons/vue';
+
+import { useCssVariables } from '@/stores/cssVariableStore';
 import { Input } from '@/components/ui/input';
 import { NumberField, NumberFieldContent, NumberFieldDecrement, NumberFieldIncrement, NumberFieldInput } from '@/components/ui/number-field';
 import { Toggle } from '@/components/ui/toggle';
+
+import FontFamilyPicker from './FontFamilyPicker.vue';
 
 const props = defineProps({
   prefix: {
@@ -14,51 +16,58 @@ const props = defineProps({
   },
 });
 
-const family = useCssVar(`--${props.prefix}_font-family`);
-const size   = useCssVar(`--${props.prefix}_font-size`);
-const weight = useCssVar(`--${props.prefix}_font-weight`);
-const style  = useCssVar(`--${props.prefix}_font-style`);
-const color  = useCssVar(`--${props.prefix}_color`);
+const { bindVariable } = useCssVariables();
 
-const previewStyle = computed(() => ({
-  fontWeight: weight.value,
-  fontStyle: style.value,
-  color: color.value,
+const fontFamily = bindVariable( `--${props.prefix}_font-family`);
+const fontColor  = bindVariable(`--${props.prefix}_color`);
+
+const fontSize   = bindVariable(
+  `--${props.prefix}_font-size`,
+  (value) => `${value}pt`,
+  (value) => parseFloat(value)
+);
+
+const fontWeight = bindVariable(
+  `--${props.prefix}_font-weight`,
+  (value) => value ? 'bold' : 'normal',
+  (value) => value === 'bold'
+);
+
+const fontStyle = bindVariable(
+  `--${props.prefix}_font-style`,
+  (value) => value ? 'italic' : 'normal',
+  (value) => value === 'italic'
+);
+
+const previewStyle = computed(() => ({ 
+  fontWeight: `var(${fontWeight.cssProperty})`, 
+  fontStyle:  `var(${fontStyle.cssProperty})`, 
+  color:      `var(${fontColor.cssProperty})`,
 }));
-
-const selectedFont   = ref(family.value)
-const selectedBold   = ref(family.weight === 'bold')
-const selectedItalic = ref(family.style === 'italic')
-const selectedSize   = ref(parseFloat(size.value))
-
-watchEffect(() => family.value = selectedFont.value.family);
-watchEffect(() => weight.value = selectedBold.value ? 'bold' : 'normal');
-watchEffect(() => style.value  = selectedItalic.value ? 'italic' : 'normal');
-watchEffect(() => size.value   = `${selectedSize.value}pt`);
 </script>
 
 <template>
   <div class="flex flex-col space-y-2">
     <div class="flex">
       <FontFamilyPicker
-        v-model:font="selectedFont"
+        v-model="fontFamily"
         :style="previewStyle"
       />
     </div>
     <div class="flex flex-row space-x-4">
       <Input
-        v-model="color"
+        v-model="fontColor"
         type="color"
         class="w-12 p-1"
       />
       <Toggle
-        v-model:pressed="selectedBold"
+        v-model:pressed="fontWeight"
         class="w-8 p-1"
       >
         <FontBoldIcon />
       </Toggle>
       <Toggle
-        v-model:pressed="selectedItalic"
+        v-model:pressed="fontStyle"
         class="w-8 p-1"
       >
         <FontItalicIcon />
@@ -66,10 +75,10 @@ watchEffect(() => size.value   = `${selectedSize.value}pt`);
       <div class="grow">
 &nbsp;
       </div>
-      <NumberField v-model="selectedSize">
+      <NumberField v-model="fontSize">
         <NumberFieldContent>
           <NumberFieldDecrement />
-          <NumberFieldInput />
+          <NumberFieldInput suffix="pt" />
           <NumberFieldIncrement />
         </NumberFieldContent>
       </NumberField>

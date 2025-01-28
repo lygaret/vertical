@@ -3,43 +3,39 @@ import { computed, ref, watchEffect } from 'vue';
 import { useState } from '/:hooks.js';
 
 import { ListboxContent, ListboxFilter, ListboxItem, ListboxRoot, ListboxVirtualizer } from 'radix-vue';
+import { MagnifyingGlassIcon } from '@radix-icons/vue';
 
-import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { useSettingsStore } from '@/stores/settingsStore';
-
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MagnifyingGlassIcon } from '@radix-icons/vue';
 
 import FontGoogleConsent from './FontGoogleConsent.vue';
 import FontFamilyPreview from './FontFamilyPreview.vue';
 
 const settings = useSettingsStore();
-const { googleFonts } = useState();
-
-const props = defineProps({
+const props    = defineProps({
   style: { type: Object, required: false, default: null },
 });
 
-const selectedFont = defineModel('font', { type: Object, default: null });
-
+const { googleFonts } = useState();
 const allowedFonts = computed(() => {
-  const google = settings.allowGoogle ? googleFonts : [];
   return [
     { family: 'sans-serif', category: 'local' },
     { family: 'serif', category: 'local' },
     { family: 'cursive', category: 'local' },
     { family: 'monospace', category: 'local' },
-    ...google,
+    ...(settings.allowGoogle ? googleFonts : []),
   ];
 });
 
-const categories = computed(() => new Set(allowedFonts.value.map((font) => font.category)))
+const open = ref(false);
 
 const searchTerm = ref('');
 const searchCategory = ref(null);
+const searchCategories = computed(() => new Set(allowedFonts.value.map((font) => font.category)))
 
 const filteredFonts = computed(() => {
   let searchFonts = allowedFonts.value;
@@ -53,7 +49,19 @@ const filteredFonts = computed(() => {
       )
 });
 
-const open = ref(false);
+const selectedFamily = defineModel({ type: String, default: null });
+const selectedFont   = computed(() => {
+  if (selectedFamily.value == null)
+    return null;
+
+  const selected = allowedFonts.value.find((font) => font.family === selectedFamily.value);
+  if (selected == null) {
+    console.warn('selected font not found', selectedFamily.value);
+    return allowedFonts.value[0];
+  }
+
+  return selected
+})
 
 function loadFullFont(font) {
   if (font == null || font.category === 'local') 
@@ -74,23 +82,12 @@ function loadFullFont(font) {
 
 // Watch for changes in selection to load full fonts
 watchEffect(() => {
-  if (typeof selectedFont.value === 'string') {
-    selectedFont.value = allowedFonts.value.find((font) => font.family === selectedFont.value);
-    if (selectedFont.value == null) {
-      selectedFont.value = allowedFonts.value[0];
-      console.warn(`Font ${selectedFont.value} not found in allowed fonts`);
-    }
-
-    return
-  }
-
-  if (selectedFont.value) {
+  if (selectedFont.value)
     loadFullFont(selectedFont.value)
 
-    open.value = false
-    searchTerm.value = ""
-  }
-})
+  open.value = false
+  searchTerm.value = ""
+});
 </script>
 
 <template>
@@ -116,7 +113,7 @@ watchEffect(() => {
       side="bottom"
       :side-offset="0"
     >
-      <ListboxRoot v-model="selectedFont">
+      <ListboxRoot v-model="selectedFamily">
         <ListboxFilter
           as="div"
           class="w-full flex items-center justify-between rounded-sm focus-within:outline-none focus-within:ring-1 focus-within:ring-ring"
@@ -138,7 +135,7 @@ watchEffect(() => {
                   All
                 </SelectItem>
                 <SelectItem
-                  v-for="category of categories"
+                  v-for="category of searchCategories"
                   :key="category"
                   :value="category"
                 >
@@ -159,7 +156,7 @@ watchEffect(() => {
           >
             <ListboxItem
               :key="option.family"
-              :value="option"
+              :value="option.family"
               class="w-full relative flex cursor-default select-none items-center rounded-sm px-4 py-1.5 text-sm outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
             >
               <FontFamilyPreview :font="option" />

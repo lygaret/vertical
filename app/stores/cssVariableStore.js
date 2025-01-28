@@ -3,38 +3,52 @@ import { defineStore } from "pinia";
 
 export const useCssVariables = defineStore('cssVariablesStore', () => {
   const variables = ref({})
-  const styletag  = ref(null)
+  const target    = computed(() => window?.document?.documentElement)
 
-  const declaration = computed(() => {
-    return Object.entries(variables.value)
-      .map(([key, value]) => `--${key}: ${value};`)
-      .join("\n")
-  });
+  function bindVariable(
+    key,
+    toCss   = (value) => value,
+    fromCss = (value) => value
+  ) {
+    const comp = computed({
+      get: ()      => fromCss(variables.value[key] || readVariable(key)),
+      set: (value) => setVariable(key, toCss(value))
+    })
 
-  const mount = () => {
-    if (window && window.document) {
-      styletag.value = document.createElement("style")
-      document.head.appendChild(styletag.value)
-    }
+    Object.defineProperty(comp, 'cssProperty', {
+      value: key,
+      writable: false,
+      enumerable: false,
+    })
+
+    return comp;
   }
 
-  const unmount = () => {
-    if (window && window.document && styletag.value) {
-      document.head.removeChild(styletag.value)
-    }
+  function setVariable(key, value) {
+    variables.value[key] = value
+  }
+
+  function readVariable(key) {
+    return window.getComputedStyle(target.value).getPropertyValue(key)?.trim()
+  }
+
+  function clearVariable(key) {
+    delete variables.value[key]
   }
 
   watchEffect(() => {
-    if (styletag.value) {
-      styletag.value.innerHTML = declaration.value
+    if (target.value) {
+      Object.entries(variables.value).forEach(([key, value]) => {
+        target.value.style.setProperty(key, value)
+      })
     }
   })
 
   return {
     variables,
-    declaration,
-    mount,
-    unmount,
+    bindVariable,
+    setVariable,
+    clearVariable,
   }
 }, {
   persist: true

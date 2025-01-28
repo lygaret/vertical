@@ -69,6 +69,6 @@ watch(() => props.font, (font) => {
     >
       {{ font.family }}
     </span>
-    <small>{{ font.category }}</small>
+    <small class="text-muted-foreground">{{ font.category }}</small>
   </div>
 </template>
