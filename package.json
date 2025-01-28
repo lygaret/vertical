@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@cheprasov/jsbt": "^1.2.3",
+    "@fastify/compress": "^8.0.1",
     "@fastify/cookie": "^11.0.2",
     "@fastify/formbody": "^8.0.2",
     "@fastify/one-line-logger": "latest",
