@@ -10,6 +10,11 @@
   import { CalendarPreview, ImportICSSidebarGroup, MonthSelectorSidebarGroup } from '@/components/app/calendar';
   import FontEditor from '@/components/app/editor/FontEditor.vue';
   import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { useCssVariables } from '@/stores/cssVariableStore';
+import { Input } from '@/components/ui/input';
+
+  const { bindVariable } = useCssVariables();
+  const cssPageColor = bindVariable('--calendar_page_color');
 </script>
 
 <template>
@@ -31,12 +36,28 @@
         <MonthSelectorSidebarGroup />
         <ImportICSSidebarGroup />
         <SidebarGroup>
-          <SidebarGroupLabel>Month</SidebarGroupLabel>
-          <FontEditor prefix="calendar_month" />
+          <SidebarGroupLabel>Page</SidebarGroupLabel>
+          <Input v-model="cssPageColor" type="color" />
         </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Year</SidebarGroupLabel>
           <FontEditor prefix="calendar_year" />
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Month</SidebarGroupLabel>
+          <FontEditor prefix="calendar_month" />
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Day of Month</SidebarGroupLabel>
+          <FontEditor prefix="calendar_day-of-month" />
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Day of Week</SidebarGroupLabel>
+          <FontEditor prefix="calendar_day-of-week" />
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Event Content</SidebarGroupLabel>
+          <FontEditor prefix="calendar_content" />
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>

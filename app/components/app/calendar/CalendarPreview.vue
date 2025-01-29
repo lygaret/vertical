@@ -36,7 +36,7 @@
           {{ weekdayName(day.date.getDay()) }}
         </div>
         <div :class="$style.col_content">
-          <pre>{{ day.events.map(e => e.name).join(", ") }}</pre>
+          {{ day.events.map(e => e.name).join(", ") }}
         </div>
       </div>
     </div>
@@ -77,20 +77,23 @@
     --calendar_row-weekend_color: inherit;
     --calendar_row-weekend_background-color: rgba(150, 175, 250, 0.3);
 
-    --calendar_day-of-month_color: #535;
     --calendar_day-of-month_font-family: sans-serif;
-    --calendar_day-of-month_font-weight: 600;
-    --calendar_day-of-month_font-size: 1.0em;
+    --calendar_day-of-month_font-size: 14pt;
+    --calendar_day-of-month_font-weight: bold;
+    --calendar_day-of-month_font-style: noraml;
+    --calendar_day-of-month_color: var(--calendar_page_color);
 
-    --calendar_day-of-week_color: #555;
     --calendar_day-of-week_font-family: sans-serif;
-    --calendar_day-of-week_font-weight: 300;
-    --calendar_day-of-week_font-size: 1.0em;
+    --calendar_day-of-week_font-size: 14pt;
+    --calendar_day-of-week_font-weight: normal;
+    --calendar_day-of-week_font-style: normal;
+    --calendar_day-of-week_color: #555;
 
-    --calendar_content_color: #336;
     --calendar_content_font-family: sans-serif;
-    --calendar_content_font-weight: 300;
-    --calendar_content_font-size: 0.7em;
+    --calendar_content_font-size: 16pt;
+    --calendar_content_font-weight: normal;
+    --calendar_content_font-style: normal;
+    --calendar_content_color: var(--calendar_page_color);
   }
 </style>
 
@@ -218,8 +221,9 @@
 
       color: var(--calendar_day-of-month_color);
       font-family: var(--calendar_day-of-month_font-family);
-      font-weight: var(--calendar_day-of-month_font-weight);
       font-size: var(--calendar_day-of-month_font-size);
+      font-weight: var(--calendar_day-of-month_font-weight);
+      font-style: var(--calendar_day-of-month_font-style);
 
       text-align: right;
   }
@@ -231,6 +235,7 @@
       font-family: var(--calendar_day-of-week_font-family);
       font-weight: var(--calendar_day-of-week_font-weight);
       font-size: var(--calendar_day-of-week_font-size);
+      font-style: var(--calendar_day-of-week_font-style);
 
       text-align: left;
   }
@@ -245,5 +250,6 @@
       font-family: var(--calendar_content_font-family);
       font-weight: var(--calendar_content_font-weight);
       font-size: var(--calendar_content_font-size);
+      font-style: var(--calendar_content_font-style);
   }
 </style>
