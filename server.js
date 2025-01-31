@@ -58,4 +58,4 @@ await server.register(fastifyVite, {
 })
 
 await server.vite.ready()
-await server.listen({ port: 3001 })
+await server.listen({ host: '0.0.0.0', port: 3001 })
