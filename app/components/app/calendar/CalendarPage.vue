@@ -6,6 +6,7 @@
 
   const props = defineProps({
     class: { type: String, default: null, required: false },
+    disabled: { type: Boolean, default: false, required: false },
   });
 
   const store = useCalendarStore();
@@ -29,7 +30,7 @@
 </script>
 
 <template>
-  <div :class="cn(props.class, $style.page, cssPagePatternClass)">
+  <div v-if="!props.disabled" :class="cn(props.class, $style.page, cssPagePatternClass)">
     <h2 :class="$style.year">
       {{ store.currentYear }}
     </h2>

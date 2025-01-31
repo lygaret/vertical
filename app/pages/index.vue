@@ -4,7 +4,7 @@
 </script>
 
 <script setup>
-  import { computed, ref } from 'vue';
+  import { computed, onMounted, onUnmounted, ref } from 'vue';
   import { cn } from '@/lib/utils';
 
   import { useCssVariables } from '@/stores/cssVariableStore';
@@ -15,10 +15,27 @@
   import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
   import { BrandBadge } from '@/components/app';
-  import { CalendarPreview, ImportICSSidebarGroup, MonthSelectorSidebarGroup } from '@/components/app/calendar';
+  import { CalendarPage, ImportICSSidebarGroup, MonthSelectorSidebarGroup } from '@/components/app/calendar';
   import { FontEditor } from '@/components/app/editor';
 
   const { bindVariable } = useCssVariables();
+
+  const isPrinting = ref(false);
+  function beforePrint() {
+    isPrinting.value = true;
+  }
+  function afterPrint() {
+    isPrinting.value = false;
+  }
+  onMounted(() => {
+    window.addEventListener('beforeprint', beforePrint);
+    window.addEventListener('afterprint', afterPrint);
+  })
+
+  onUnmounted(() => {
+    window.removeEventListener('beforeprint', beforePrint);
+    window.removeEventListener('afterprint', afterPrint);
+  });
 
   const cssPagePatternOptions = [
     { value: "solid", label: "Solid" },
@@ -40,11 +57,11 @@
 
 <template>
   <div class="w-[12in] h-[18in] hidden print:block m-0 p-0">
-    <CalendarPreview />
+    <CalendarPage :disabled="!isPrinting" />
   </div>
   <SidebarProvider :class="cn($style.SidebarProvider, 'print:hidden')">
     <SidebarInset>
-      <CalendarPreview />
+      <CalendarPage />
     </SidebarInset>
     <Sidebar
       side="right"
