@@ -4,26 +4,51 @@
 </script>
 
 <script setup>
+  import { computed, ref } from 'vue';
   import { cn } from '@/lib/utils';
+
+  import { useCssVariables } from '@/stores/cssVariableStore';
+
+  import { Input } from '@/components/ui/input';
+  import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
   import { BrandBadge } from '@/components/app';
   import { CalendarPreview, ImportICSSidebarGroup, MonthSelectorSidebarGroup } from '@/components/app/calendar';
   import FontEditor from '@/components/app/editor/FontEditor.vue';
-  import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import { useCssVariables } from '@/stores/cssVariableStore';
-import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
   const { bindVariable } = useCssVariables();
-  const cssPageColor = bindVariable('--calendar_page_color');
+
+  const cssPagePatternOptions = [
+    { value: "solid", label: "Solid" },
+    { value: "radial", label: "Radial" },
+    { value: "zigzag", label: "Zig Zag" },
+    { value: "diagonal", label: "Diagonal" },
+    { value: "isometric", label: "Isometric" },
+  ];
+
+  const cssPageColorA = bindVariable('--calendar_page_background-color-a');
+  const cssPageColorB = bindVariable('--calendar_page_background-color-b');
+  const cssPagePatternSize = bindVariable(
+    '--calendar_page_background-size',
+    (value) => `${value}pt`,
+    (value) => parseFloat(value)
+  );
+  
+  const cssPagePatternStyle = bindVariable('--calendar_page_background-pattern');
+  const cssPagePatternClass = computed(() => {
+    return `calendar-page-pattern-${cssPagePatternStyle.value}`;
+  });
 </script>
 
 <template>
   <div class="w-[12in] h-[18in] hidden print:block m-0 p-0">
-    <CalendarPreview />
+    <CalendarPreview :class="cssPagePatternClass" />
   </div>
   <SidebarProvider :class="cn($style.SidebarProvider, 'print:hidden')">
     <SidebarInset>
-      <CalendarPreview />
+      <CalendarPreview :class="cssPagePatternClass" />
     </SidebarInset>
     <Sidebar
       side="right"
@@ -37,7 +62,34 @@ import { Input } from '@/components/ui/input';
         <ImportICSSidebarGroup />
         <SidebarGroup>
           <SidebarGroupLabel>Page</SidebarGroupLabel>
-          <Input v-model="cssPageColor" type="color" />
+          <Label>
+            Pattern
+            <Select v-model="cssPagePatternStyle">
+              <SelectTrigger class="text-xs basis-[25%] grow-0 shadow-none border-none">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem
+                    v-for="pattern of cssPagePatternOptions"
+                    :key="pattern.value"
+                    :value="pattern.value"
+                  >
+                    {{ pattern.label }}
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </Label>
+          <Label>
+            Background <small>Primary</small>
+            <Input v-model="cssPageColorA" type="color" />
+          </Label>
+          <Label>
+            Background <small>Secondary</small>
+            <Input v-model="cssPageColorB" :disabled="cssPagePatternStyle == 'solid'" type="color" />
+          </Label>
+          <Input v-model="cssPagePatternSize" type="range" min="1" max="100" step="1" />
         </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Year</SidebarGroupLabel>

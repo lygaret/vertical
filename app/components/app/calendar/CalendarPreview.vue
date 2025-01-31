@@ -1,6 +1,11 @@
 <script setup>
   import { useCssModule } from 'vue';
   import { useCalendarStore, monthName, weekdayName } from "@/stores/calendarStore"
+  import { cn } from '@/lib/utils';
+
+  const props = defineProps({
+    class: { type: String, default: null, required: false },
+  });
 
   const store = useCalendarStore();
   const style = useCssModule();
@@ -16,7 +21,7 @@
 </script>
 
 <template>
-  <div :class="$style.page">
+  <div :class="cn(props.class, $style.page)">
     <h2 :class="$style.year">
       {{ store.currentYear }}
     </h2>
@@ -46,7 +51,10 @@
 <style lang="css" global>
   :root {
     --calendar_page_color: #003377;
-    --calendar_page_background-color: transparent;
+    --calendar_page_background-pattern: solid;
+    --calendar_page_background-color-a: rgb(238, 238, 255);
+    --calendar_page_background-color-b: rgb(221, 221, 255);
+    --calendar_page_background-size: 16pt;
     --calendar_page_font-size: 14pt;
     --calendar_page_padding: 1em 2em;
 
@@ -72,10 +80,10 @@
     --calendar_daygrid_border-style: solid;
 
     --calendar_row_color: inherit;
-    --calendar_row_background-color: rgba(100, 100, 200, 0.1);
+    --calendar_row_background-color: color-mix(in srgb, var(--calendar_page_background-color-b) 70%, transparent);
 
     --calendar_row-weekend_color: inherit;
-    --calendar_row-weekend_background-color: rgba(150, 175, 250, 0.3);
+    --calendar_row-weekend_background-color: color-mix(in srgb, var(--calendar_page_background-color-a) 70%, transparent);
 
     --calendar_day-of-month_font-family: sans-serif;
     --calendar_day-of-month_font-size: 14pt;
@@ -95,6 +103,82 @@
     --calendar_content_font-style: normal;
     --calendar_content_color: var(--calendar_page_color);
   }
+
+  @page {
+    size: 12in 18in;
+    margin: 0;
+  }
+
+  @media print {
+    body {
+      margin: 0;
+      padding: 0;
+      width: 12in;
+      height: 18in;
+      overflow: hidden;
+    }
+
+    * {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+
+  .calendar-page-pattern-radial {
+    background-color: var(--calendar_page_background-color-a);
+    opacity: 0.8;
+    background-image: 
+      radial-gradient(circle at center center, var(--calendar_page_background-color-a), var(--calendar_page_background-color-b)),
+      repeating-radial-gradient(circle at center center, var(--calendar_page_background-color-a), var(--calendar_page_background-color-b), var(--calendar_page_background-size), transparent calc(var(--calendar_page_background-size) * 2), transparent var(--calendar_page_background-size));
+    background-blend-mode: multiply;
+  }
+
+  .calendar-page-pattern-zigzag {
+    background-color: var(--calendar_page_background-color-a);
+    opacity: 0.8;
+    background-image:  
+      linear-gradient(135deg, var(--calendar_page_background-color-b) 25%, transparent 25%), 
+      linear-gradient(225deg, var(--calendar_page_background-color-b) 25%, transparent 25%), 
+      linear-gradient(45deg, var(--calendar_page_background-color-b) 25%, transparent 25%), 
+      linear-gradient(315deg, var(--calendar_page_background-color-b) 25%, var(--calendar_page_background-color-a) 25%);
+    background-position: calc(var(--calendar_page_background-size) / 2) 0, 
+                        calc(var(--calendar_page_background-size) / 2) 0, 
+                        0 0, 
+                        0 0;
+    background-size: var(--calendar_page_background-size) var(--calendar_page_background-size);
+    background-repeat: repeat;
+  }
+
+  .calendar-page-pattern-diagonal {
+    background-color: var(--calendar_page_background-color-a);
+    opacity: 0.8;
+    background: repeating-linear-gradient(
+      45deg,
+      var(--calendar_page_background-color-b),
+      var(--calendar_page_background-color-b) calc(var(--calendar_page_background-size) / 3),
+      var(--calendar_page_background-color-a) calc(var(--calendar_page_background-size) / 3),
+      var(--calendar_page_background-color-a) var(--calendar_page_background-size)
+    );
+  }
+
+  .calendar-page-pattern-isometric {
+    background-color: var(--calendar_page_background-color-a);
+    opacity: 0.8;
+    background-image:  
+      linear-gradient(30deg, var(--calendar_page_background-color-b) 12%, transparent 12.5%, transparent 87%, var(--calendar_page_background-color-b) 87.5%, var(--calendar_page_background-color-b)), 
+      linear-gradient(150deg, var(--calendar_page_background-color-b) 12%, transparent 12.5%, transparent 87%, var(--calendar_page_background-color-b) 87.5%, var(--calendar_page_background-color-b)), 
+      linear-gradient(30deg, var(--calendar_page_background-color-b) 12%, transparent 12.5%, transparent 87%, var(--calendar_page_background-color-b) 87.5%, var(--calendar_page_background-color-b)), 
+      linear-gradient(150deg, var(--calendar_page_background-color-b) 12%, transparent 12.5%, transparent 87%, var(--calendar_page_background-color-b) 87.5%, var(--calendar_page_background-color-b)), 
+      linear-gradient(60deg, color-mix(in srgb, var(--calendar_page_background-color-b) 47%, transparent) 25%, transparent 25.5%, transparent 75%, color-mix(in srgb, var(--calendar_page_background-color-b) 47%, transparent) 75%, color-mix(in srgb, var(--calendar_page_background-color-b) 47%, transparent)), 
+      linear-gradient(60deg, color-mix(in srgb, var(--calendar_page_background-color-b) 47%, transparent) 25%, transparent 25.5%, transparent 75%, color-mix(in srgb, var(--calendar_page_background-color-b) 47%, transparent) 75%, color-mix(in srgb, var(--calendar_page_background-color-b) 47%, transparent));
+    background-size: calc(var(--calendar_page_background-size) * 1.25) calc(var(--calendar_page_background-size) * 2.19);
+    background-position: 0 0, 
+                        0 0, 
+                        calc(var(--calendar_page_background-size) * 0.625) calc(var(--calendar_page_background-size) * 1.125), 
+                        calc(var(--calendar_page_background-size) * 0.625) calc(var(--calendar_page_background-size) * 1.125), 
+                        0 0, 
+                        calc(var(--calendar_page_background-size) * 0.625) calc(var(--calendar_page_background-size) * 1.125);
+  }
 </style>
 
 <style lang="css" module>
@@ -106,7 +190,7 @@
     padding: var(--calendar_page_padding);
 
     color: var(--calendar_page_color);
-    background-color: var(--calendar_page_background-color);
+    background-color: var(--calendar_page_background-color-a);
 
     font-size: var(--calendar_page_font-size);
   }
