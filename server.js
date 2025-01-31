@@ -31,8 +31,8 @@ async function loadGoogleFonts() {
 
     return fonts
   } catch (error) {
-    console.error("Failed to fetch fonts:", error);
-    throw error;
+    console.error("Failed to fetch google fonts...", error);
+    return [];
   }
 }
 

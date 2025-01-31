@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "dotenvx run -- node server.js --dev",
     "build": "npm run build:app && npm run build:server",
-    "start": "dotenvx run -- node server.js",
+    "start": "node server.js",
     "build:app": "vite build --outDir dist/app --ssrManifest",
     "build:server": "vite build --outDir dist/server --ssr /:index.js",
     "lint": "eslint . --ext .js,.jsx,.vue --fix"
