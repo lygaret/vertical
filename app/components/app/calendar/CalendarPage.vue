@@ -3,9 +3,12 @@
   import { useCalendarStore, monthName, weekdayName } from "@/stores/calendarStore"
   import { cn } from '@/lib/utils';
   import { useCssVariables } from '@/stores/cssVariableStore';
+  import LocalEventTrigger from './LocalEventTrigger.vue';
+  import CalendarEvent from './CalendarEvent.vue';
 
   const props = defineProps({
     class: { type: String, default: null, required: false },
+    interactive: { type: Boolean, default: false, required: false },
     disabled: { type: Boolean, default: false, required: false },
   });
 
@@ -30,7 +33,10 @@
 </script>
 
 <template>
-  <div v-if="!props.disabled" :class="cn(props.class, $style.page, cssPagePatternClass)">
+  <div
+    v-if="!props.disabled"
+    :class="cn(props.class, $style.page, cssPagePatternClass)"
+  >
     <h2 :class="$style.year">
       {{ store.currentYear }}
     </h2>
@@ -50,8 +56,16 @@
           {{ weekdayName(day.date.getDay()) }}
         </div>
         <div :class="$style.col_content">
-          {{ day.events.map(e => e.name).join(", ") }}
+          <CalendarEvent
+            v-for="event in day.events"
+            :key="event.id"
+            :event="event"
+          />
         </div>
+        <LocalEventTrigger
+          v-if="props.interactive"
+          :date="day.date"
+        />
       </div>
     </div>
   </div>
@@ -335,6 +349,10 @@
 
   .date_row > .col_content {
       flex: 1 1 100%;
+
+      display: flex;
+      flex-direction: row;
+      justify-content: end;
 
       text-align: right;
       padding-right: 1em;

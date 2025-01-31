@@ -78,6 +78,7 @@ function makeEventFromICS(event) {
     name: event.summary,
     startDate: event.startDate.toJSDate(),
     endDate: event.endDate.toJSDate(),
+    type: 'ics'
   }
 }
 
@@ -211,6 +212,15 @@ export const useCalendarStore = defineStore('calendarStore', () => {
     return days;
   })
 
+  function createLocalEvent(event) {
+    const uid = makeInternalUid("local-event");
+    localEvents.value.set(uid, { ...event, uid, type: 'local' });
+  }
+
+  function removeLocalEvent(uid) {
+    localEvents.value.delete(uid);
+  }
+
   async function importICSFile(file) {
     const calendar = await makeCalendarFromICS(file)
     if (icsCalendars.value.has(calendar.id)) {
@@ -232,7 +242,7 @@ export const useCalendarStore = defineStore('calendarStore', () => {
       color: calcomp.getFirstPropertyValue('color') || '#4477FF',
     }
   }
-
+  
   return {
     currentEvents,
 
@@ -243,6 +253,8 @@ export const useCalendarStore = defineStore('calendarStore', () => {
     icsCalendars,
     localEvents,
 
+    createLocalEvent,
+    removeLocalEvent,
     previewICSFile,
     importICSFile,
   }

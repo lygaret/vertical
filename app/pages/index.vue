@@ -4,7 +4,7 @@
 </script>
 
 <script setup>
-  import { computed, onMounted, onUnmounted, ref } from 'vue';
+  import { onMounted, onUnmounted, ref } from 'vue';
   import { cn } from '@/lib/utils';
 
   import { useCssVariables } from '@/stores/cssVariableStore';
@@ -20,7 +20,7 @@
 
   const { bindVariable } = useCssVariables();
 
-  const isPrinting = ref(false);
+  const isPrinting = ref(true);
   function beforePrint() {
     isPrinting.value = true;
   }
@@ -31,7 +31,6 @@
     window.addEventListener('beforeprint', beforePrint);
     window.addEventListener('afterprint', afterPrint);
   })
-
   onUnmounted(() => {
     window.removeEventListener('beforeprint', beforePrint);
     window.removeEventListener('afterprint', afterPrint);
@@ -61,7 +60,7 @@
   </div>
   <SidebarProvider :class="cn($style.SidebarProvider, 'print:hidden')">
     <SidebarInset>
-      <CalendarPage />
+      <CalendarPage interactive />
     </SidebarInset>
     <Sidebar
       side="right"
@@ -96,13 +95,25 @@
           </Label>
           <Label>
             Background <small>Primary</small>
-            <Input v-model="cssPageColorA" type="color" />
+            <Input
+              v-model="cssPageColorA"
+              type="color"
+            />
           </Label>
           <Label>
             Background <small>Secondary</small>
-            <Input v-model="cssPageColorB" type="color" />
+            <Input
+              v-model="cssPageColorB"
+              type="color"
+            />
           </Label>
-          <Input v-model="cssPagePatternSize" type="range" min="1" max="100" step="1" />
+          <Input
+            v-model="cssPagePatternSize"
+            type="range"
+            min="1"
+            max="100"
+            step="1"
+          />
         </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Year</SidebarGroupLabel>
