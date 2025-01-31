@@ -1,0 +1,1 @@
+export { default as FontEditor } from './FontEditor.vue';

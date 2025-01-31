@@ -1,7 +1,8 @@
 <script setup>
-  import { useCssModule } from 'vue';
+  import { computed, useCssModule } from 'vue';
   import { useCalendarStore, monthName, weekdayName } from "@/stores/calendarStore"
   import { cn } from '@/lib/utils';
+  import { useCssVariables } from '@/stores/cssVariableStore';
 
   const props = defineProps({
     class: { type: String, default: null, required: false },
@@ -9,6 +10,9 @@
 
   const store = useCalendarStore();
   const style = useCssModule();
+
+  const { bindVariable } = useCssVariables()
+  const cssPagePatternStyle = bindVariable('--calendar_page_background-pattern');
 
   function weekdayClass(date) {
       const day = date.getDay()
@@ -18,10 +22,14 @@
 
       return "";
   }
+
+  const cssPagePatternClass = computed(() => {
+    return `calendar-page-pattern-${cssPagePatternStyle.value}`;
+  });
 </script>
 
 <template>
-  <div :class="cn(props.class, $style.page)">
+  <div :class="cn(props.class, $style.page, cssPagePatternClass)">
     <h2 :class="$style.year">
       {{ store.currentYear }}
     </h2>
