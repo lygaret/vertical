@@ -17,8 +17,10 @@
   import { BrandBadge } from '@/components/app';
   import { CalendarPage, ImportICSSidebarGroup, MonthSelectorSidebarGroup } from '@/components/app/calendar';
   import { FontEditor } from '@/components/app/editor';
+import { Button } from '@/components/ui/button';
 
-  const { bindVariable } = useCssVariables();
+  const cssVariablesStore = useCssVariables();
+  const { bindVariable } = cssVariablesStore;
 
   const isPrinting = ref(true);
   function beforePrint() {
@@ -45,6 +47,7 @@
   ];
 
   const cssPagePattern = bindVariable('--calendar_page_background-pattern');
+
   const cssPageColorA = bindVariable('--calendar_page_background-color-a');
   const cssPageColorB = bindVariable('--calendar_page_background-color-b');
   const cssPagePatternSize = bindVariable(
@@ -72,6 +75,10 @@
       <SidebarContent>
         <MonthSelectorSidebarGroup />
         <ImportICSSidebarGroup />
+        <hr>
+        <SidebarGroup>
+          <Button @click="cssVariablesStore.clearStore()">Reset Theme</Button>
+        </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Page</SidebarGroupLabel>
           <Label>

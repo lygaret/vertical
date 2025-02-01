@@ -4,7 +4,7 @@ import { partition, some } from 'lodash-es';
 import ICAL from 'ical.js';
 import { JSBT } from '@cheprasov/jsbt/src/JSBT';
 
-let internalUid = 0
+let internalUid = new Date().valueOf()
 function makeInternalUid(prefix) {
   internalUid = internalUid + 1
   return `${prefix}-uid-${internalUid}`

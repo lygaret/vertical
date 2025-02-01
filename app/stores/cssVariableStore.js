@@ -1,4 +1,4 @@
-import { computed, ref, watchEffect } from "vue";
+import { computed, reactive, ref, watch, watchEffect } from "vue";
 import { defineStore } from "pinia";
 
 export const useCssVariables = defineStore('cssVariablesStore', () => {
@@ -11,7 +11,7 @@ export const useCssVariables = defineStore('cssVariablesStore', () => {
     fromCss = (value) => value
   ) {
     const comp = computed({
-      get: ()      => fromCss(variables.value[key] || readVariable(key)),
+      get: ()      => fromCss(readVariable(key)),
       set: (value) => setVariable(key, toCss(value))
     })
 
@@ -29,26 +29,44 @@ export const useCssVariables = defineStore('cssVariablesStore', () => {
   }
 
   function readVariable(key) {
-    return window.getComputedStyle(target.value).getPropertyValue(key)?.trim()
+    return variables.value[key] || (
+      window.getComputedStyle(target.value).getPropertyValue(key)?.trim()
+    );
   }
 
   function clearVariable(key) {
     delete variables.value[key]
   }
 
-  watchEffect(() => {
-    if (target.value) {
-      Object.entries(variables.value).forEach(([key, value]) => {
-        target.value.style.setProperty(key, value)
-      })
+  function clearStore() {
+    variables.value = {}
+  }
+
+  watch([target, variables], ([target, variables], [_, oldVars]) => {
+    if (target) {
+      const toRemove = new Set();
+      for (const key of Object.getOwnPropertyNames(oldVars)) {
+        if (variables[key] === undefined)
+          toRemove.add(key);
+      }
+
+      for (const key of toRemove) {
+        target.style.setProperty(key, null);
+      }
+
+      for (const key of Object.getOwnPropertyNames(variables)) {
+        target.style.setProperty(key, variables[key])
+      }
     }
-  })
+  }, { deep: true })
 
   return {
     variables,
     bindVariable,
     setVariable,
+    readVariable,
     clearVariable,
+    clearStore,
   }
 }, {
   persist: true
