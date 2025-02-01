@@ -75,8 +75,8 @@
   :root {
     --calendar_page_color: #003377;
     --calendar_page_background-pattern: solid;
-    --calendar_page_background-color-a: rgb(238, 238, 255);
-    --calendar_page_background-color-b: rgb(221, 221, 255);
+    --calendar_page_background-color-a: #eeeeff;
+    --calendar_page_background-color-b: #ccccff;
     --calendar_page_background-size: 16pt;
     --calendar_page_font-size: 14pt;
     --calendar_page_padding: 1em 2em;
@@ -85,7 +85,7 @@
     --calendar_year_font-size: 14pt;
     --calendar_year_font-weight: normal;
     --calendar_year_font-style: normal;
-    --calendar_year_color: var(--calendar_page_color);
+    --calendar_year_color: #9999bb;
     --calendar_year_text-align: right;
     --calendar_year_margin: 0;     
  
@@ -93,20 +93,20 @@
     --calendar_month_font-size: 24pt;
     --calendar_month_font-weight: normal;
     --calendar_month_font-style: normal;
-    --calendar_month_color: var(--calendar_page_color);
+    --calendar_month_color: #666699;
     --calendar_month_text-align: right;     
     --calendar_month_margin: 0;     
 
-    --calendar_daygrid_border-color: #ccf;
+    --calendar_daygrid_border-color: #9999ff;
     --calendar_daygrid_border-width: 5pt;
     --calendar_daygrid_border-radius: 15pt;
     --calendar_daygrid_border-style: solid;
 
     --calendar_row_color: inherit;
-    --calendar_row_background-color: color-mix(in srgb, var(--calendar_page_background-color-b) 70%, transparent);
+    --calendar_row_background-color: #ddddff;
 
     --calendar_row-weekend_color: inherit;
-    --calendar_row-weekend_background-color: color-mix(in srgb, var(--calendar_page_background-color-a) 70%, transparent);
+    --calendar_row-weekend_background-color: #eeeeff;
 
     --calendar_day-of-month_font-family: sans-serif;
     --calendar_day-of-month_font-size: 14pt;
@@ -118,7 +118,7 @@
     --calendar_day-of-week_font-size: 14pt;
     --calendar_day-of-week_font-weight: normal;
     --calendar_day-of-week_font-style: normal;
-    --calendar_day-of-week_color: #555;
+    --calendar_day-of-week_color: #666666;
 
     --calendar_content_font-family: sans-serif;
     --calendar_content_font-size: 16pt;

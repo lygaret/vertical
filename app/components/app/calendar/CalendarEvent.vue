@@ -39,9 +39,9 @@ function handleEdit() {
 <template>
   <div 
     :class="cn(
-      'group flex items-center gap-1 px-2 py-0.5 rounded text-sm',
-      'hover:ring-1 hover:ring-border',
-      isLocal && 'hover:pr-12' // Space for controls
+      'group relative flex items-center px-2 m-1 rounded-md',
+      $style.CalendarEventContainer,
+      isLocal && 'hover:pr-[58px]' // Space for controls
     )"
     :style="eventStyle"
   >
@@ -50,7 +50,7 @@ function handleEdit() {
     <!-- Controls for local events -->
     <div 
       v-if="isLocal"
-      class="hidden group-hover:flex absolute right-1 bg-background/80 backdrop-blur-sm rounded"
+      class="hidden group-hover:flex absolute right-0 bg-background/80 backdrop-blur-sm rounded"
     >
       <Button
         variant="ghost"
@@ -71,3 +71,13 @@ function handleEdit() {
     </div>
   </div>
 </template>
+
+<style lang="css" module>
+  .CalendarEventContainer {
+      color: var(--calendar_content_color);
+      font-family: var(--calendar_content_font-family);
+      font-weight: var(--calendar_content_font-weight);
+      font-size: var(--calendar_content_font-size);
+      font-style: var(--calendar_content_font-style);
+  }
+</style>
