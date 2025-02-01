@@ -209,19 +209,12 @@
     display: flex;
     flex-direction: column;
 
-    height: 100%;
     padding: var(--calendar_page_padding);
 
     color: var(--calendar_page_color);
     background-color: var(--calendar_page_background-color-a);
 
     font-size: var(--calendar_page_font-size);
-  }
-
-  @media print {
-    @page {
-      size: 12in 18in;
-    }
   }
 
   h1, h2 {

@@ -58,12 +58,12 @@ import { Button } from '@/components/ui/button';
 </script>
 
 <template>
-  <div class="w-[12in] h-[18in] hidden print:block m-0 p-0">
-    <CalendarPage :disabled="!isPrinting" />
+  <div class="hidden print:block m-0 p-0">
+    <CalendarPage :disabled="!isPrinting" class="h-[18in] w-[12in]" />
   </div>
   <SidebarProvider :class="cn($style.SidebarProvider, 'print:hidden')">
     <SidebarInset>
-      <CalendarPage interactive />
+      <CalendarPage interactive class="h-[18in] w-full" />
     </SidebarInset>
     <Sidebar
       side="right"
