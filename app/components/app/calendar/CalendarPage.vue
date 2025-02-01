@@ -208,7 +208,6 @@
   .page {
     display: flex;
     flex-direction: column;
-
     padding: var(--calendar_page_padding);
 
     color: var(--calendar_page_color);

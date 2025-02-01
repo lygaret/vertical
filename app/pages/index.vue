@@ -62,8 +62,8 @@ import { Button } from '@/components/ui/button';
     <CalendarPage :disabled="!isPrinting" class="h-[18in] w-[12in]" />
   </div>
   <SidebarProvider :class="cn($style.SidebarProvider, 'print:hidden')">
-    <SidebarInset>
-      <CalendarPage interactive class="h-[18in] w-full" />
+    <SidebarInset :class="cn($style.SidebarInset)">
+      <CalendarPage interactive class="h=[18in] min-h-[18in] w-full" />
     </SidebarInset>
     <Sidebar
       side="right"
@@ -150,5 +150,10 @@ import { Button } from '@/components/ui/button';
 <style module>
 .SidebarProvider {
   --sidebar-width: 20rem !important;
+}
+
+.SidebarInset {
+    height: 100svh;
+    overflow: auto;
 }
 </style>
