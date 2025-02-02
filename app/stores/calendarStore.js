@@ -145,7 +145,6 @@ function* expandRecurrencesFor(event, calendar, month, year) {
     console.warn("bailed out of occurrence iterator after", itercount, "iterations, event:", event, "next occurence:", next)
 }
 
-
 export const useCalendarStore = defineStore('calendarStore', () => {
   const today = new Date()
 
@@ -284,6 +283,18 @@ export const useCalendarStore = defineStore('calendarStore', () => {
       color: calcomp.getFirstPropertyValue('color') || '#4477FF',
     }
   }
+
+  function resetStore(hard = false) {
+    hiddenEvents.value.clear()
+    highlightedEvents.value.clear()
+
+    if (hard) {
+      icsCalendars.value.clear();
+      localEvents.value.clear();
+
+      expandedCache.clear();
+    }
+  }
   
   return {
     currentEvents,
@@ -307,7 +318,8 @@ export const useCalendarStore = defineStore('calendarStore', () => {
     hideEvent,
     hiddenEvents,
 
-    removeEvent
+    removeEvent,
+    resetStore
   }
 }, {
   persist: {

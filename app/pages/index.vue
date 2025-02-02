@@ -7,8 +7,10 @@
   import { onMounted, onUnmounted, ref } from 'vue';
   import { cn } from '@/lib/utils';
 
+  import { useCalendarStore } from '@/stores/calendarStore';
   import { useCssVariables } from '@/stores/cssVariableStore';
 
+  import { Button } from '@/components/ui/button';
   import { Input } from '@/components/ui/input';
   import { Label } from '@/components/ui/label';
   import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -17,9 +19,10 @@
   import { BrandBadge } from '@/components/app';
   import { CalendarPage, ImportICSSidebarGroup, MonthSelectorSidebarGroup } from '@/components/app/calendar';
   import { FontEditor } from '@/components/app/editor';
-import { Button } from '@/components/ui/button';
 
+  const calendarStore = useCalendarStore();
   const cssVariablesStore = useCssVariables();
+
   const { bindVariable } = cssVariablesStore;
 
   const isPrinting = ref(true);
@@ -99,6 +102,9 @@ import { Button } from '@/components/ui/button';
         <SidebarGroup>
           <Button @click="cssVariablesStore.clearStore()">
             Reset Theme
+          </Button>
+          <Button variant="destructive" @click="calendarStore.resetStore(true)">
+            Reset Calendar
           </Button>
         </SidebarGroup>
         <SidebarGroup>
