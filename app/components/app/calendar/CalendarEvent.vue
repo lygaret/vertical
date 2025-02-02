@@ -1,5 +1,4 @@
 <script setup>
-import { computed } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Cross2Icon, Pencil2Icon, StarFilledIcon } from '@radix-icons/vue';
 import { useCalendarStore } from '@/stores/calendarStore';
@@ -9,6 +8,11 @@ import CalendarStyle from './CalendarStyle.module.css';
 const props = defineProps({
   class: {
     type: String,
+    required: false,
+   default: ""
+  },
+  interactive: {
+    type: Boolean,
     required: false
   },
   event: {
@@ -20,12 +24,7 @@ const props = defineProps({
   }
 });
 
-const store   = useCalendarStore();
-const isLocal = computed(() => props.event.type === 'local');
-
-const eventStyle = computed(() => ({
-  order: props.event.highlighted ? -1 : 0
-}));
+const store = useCalendarStore();
 
 function handleDelete() {
   store.removeEvent(props.event, true);
@@ -44,17 +43,20 @@ function handleHighlight() {
 <template>
   <div 
     :class="cn(
-      'group relative flex items-center px-2 m-1 rounded-md hover:pr-[88px]',
+      'group relative flex items-center px-2 m-1 rounded-md',
+      props.interactive && 'hover:pr-[88px]',
       CalendarStyle.col_content_event,
       props.event.highlighted && CalendarStyle.col_content_highlighted,
       props.class,
     )"
-    :style="eventStyle"
   >
     <span class="truncate relative inline-block top-0.5">{{ props.event.name }}</span>
     
     <!-- Controls for local events -->
-    <div class="hidden group-hover:flex absolute right-0 bg-background/80 backdrop-blur-sm rounded">
+    <div
+      v-if="props.interactive"
+      class="hidden group-hover:flex absolute right-0 bg-background/80 backdrop-blur-sm rounded"
+    >
       <Button
         variant="ghost"
         size="icon"

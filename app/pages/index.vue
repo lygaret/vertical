@@ -41,9 +41,16 @@ import { Button } from '@/components/ui/button';
   const cssPagePatternOptions = [
     { value: "solid", label: "Solid" },
     { value: "radial", label: "Radial" },
+    { value: "circles", label: "Circles" },
     { value: "zigzag", label: "Zig Zag" },
+    { value: "weave", label: "Weave" },
+    { value: "square-weave", label: "Square Weave" },
+    { value: "houndstooth", label: "Houndstooth" },
+    { value: "leafs", label: "Leafs" },
     { value: "diagonal", label: "Diagonal" },
     { value: "isometric", label: "Isometric" },
+    { value: "wobble", label: "Wobble" },
+    { value: "xmas", label: "Xmas" },
   ];
 
   const cssPagePattern = bindVariable('--calendar_page_background-pattern');
@@ -59,11 +66,17 @@ import { Button } from '@/components/ui/button';
 
 <template>
   <div class="hidden print:block m-0 p-0">
-    <CalendarPage :disabled="!isPrinting" class="h-[18in] w-[12in]" />
+    <CalendarPage
+      :disabled="!isPrinting"
+      class="h-[18in] w-[12in]"
+    />
   </div>
   <SidebarProvider :class="cn($style.SidebarProvider, 'print:hidden')">
     <SidebarInset :class="cn($style.SidebarInset)">
-      <CalendarPage interactive class="h=[18in] min-h-[18in] max-w-[12in] w-full mx-auto shadow-lg" />
+      <CalendarPage
+        interactive
+        class="h=[18in] min-h-[18in] max-w-[12in] w-full mx-auto shadow-lg"
+      />
     </SidebarInset>
     <Sidebar
       side="right"
@@ -77,7 +90,9 @@ import { Button } from '@/components/ui/button';
         <ImportICSSidebarGroup />
         <hr>
         <SidebarGroup>
-          <Button @click="cssVariablesStore.clearStore()">Reset Theme</Button>
+          <Button @click="cssVariablesStore.clearStore()">
+            Reset Theme
+          </Button>
         </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Page</SidebarGroupLabel>

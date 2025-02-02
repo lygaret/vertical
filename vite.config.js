@@ -2,6 +2,7 @@ import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { patchCssModules } from 'vite-css-modules'
+import vueDevTools from 'vite-plugin-vue-devtools'
 import viteVue from '@vitejs/plugin-vue'
 import viteFastify from '@fastify/vite/plugin'
 import viteFastifyVue from '@fastify/vue/plugin'
@@ -19,6 +20,7 @@ export default {
     viteVue(),
     viteFastify(),
     viteFastifyVue(),
+    vueDevTools(),
   ],
   css: {
     postcss: {

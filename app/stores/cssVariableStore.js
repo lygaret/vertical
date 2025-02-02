@@ -1,4 +1,4 @@
-import { computed, reactive, ref, watch, watchEffect } from "vue";
+import { computed, ref, watch } from "vue";
 import { defineStore } from "pinia";
 
 export const useCssVariables = defineStore('cssVariablesStore', () => {
@@ -42,7 +42,7 @@ export const useCssVariables = defineStore('cssVariablesStore', () => {
     variables.value = {}
   }
 
-  watch([target, variables], ([target, variables], [_, oldVars]) => {
+  watch([target, variables], ([target, variables], [, oldVars]) => {
     if (target) {
       const toRemove = new Set();
       for (const key of Object.getOwnPropertyNames(oldVars)) {

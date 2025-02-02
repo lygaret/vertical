@@ -1,25 +1,26 @@
 :root {
     --calendar_page_color: #003377;
-    --calendar_page_background-pattern: solid;
+    --calendar_page_background-pattern: circles;
     --calendar_page_background-color-a: #eeeeff;
     --calendar_page_background-color-b: #ccccff;
-    --calendar_page_background-size: 16pt;
+    --calendar_page_background-color-c: #9999ff;
+    --calendar_page_background-size: 64pt;
     --calendar_page_font-size: 14pt;
     --calendar_page_padding: 1em 2em;
 
     --calendar_year_font-family: sans-serif;
-    --calendar_year_font-size: 14pt;
+    --calendar_year_font-size: 20pt;
     --calendar_year_font-weight: normal;
     --calendar_year_font-style: normal;
-    --calendar_year_color: #9999bb;
+    --calendar_year_color: #666699;
     --calendar_year_text-align: right;
     --calendar_year_margin: 0;
 
     --calendar_month_font-family: sans-serif;
-    --calendar_month_font-size: 24pt;
+    --calendar_month_font-size: 32pt;
     --calendar_month_font-weight: normal;
     --calendar_month_font-style: normal;
-    --calendar_month_color: #666699;
+    --calendar_month_color: #333366;
     --calendar_month_text-align: right;
     --calendar_month_margin: 0;
 
@@ -37,7 +38,7 @@
     --calendar_day-of-month_font-family: sans-serif;
     --calendar_day-of-month_font-size: 14pt;
     --calendar_day-of-month_font-weight: bold;
-    --calendar_day-of-month_font-style: noraml;
+    --calendar_day-of-month_font-style: normal;
     --calendar_day-of-month_color: var(--calendar_page_color);
 
     --calendar_day-of-week_font-family: sans-serif;
@@ -47,24 +48,24 @@
     --calendar_day-of-week_color: #666666;
 
     --calendar_content_font-family: sans-serif;
-    --calendar_content_font-size: 16pt;
+    --calendar_content_font-size: 14pt;
     --calendar_content_font-weight: normal;
     --calendar_content_font-style: normal;
     --calendar_content_color: var(--calendar_page_color);
 
     --calendar_content-highlight_font-family: var(--calendar_content_font-family);
-    --calendar_content-highlight_font-size: var(--calendar_content_font-size);
+    --calendar_content-highlight_font-size: 16pt;
     --calendar_content-highlight_font-weight: var(--calendar_content_font-weight);
     --calendar_content-highlight_font-style: var(--calendar_content_font-style);
     --calendar_content-highlight_color: var(--calendar_content_color);
 }
 
-@page {
-    size: 12in 18in;
-    margin: 0;
-}
-
 @media print {
+    @page {
+        size: 12in 18in;
+        margin: 0;
+    }
+
     body {
         margin: 0;
         padding: 0;
@@ -79,18 +80,42 @@
     }
 }
 
+/* h/t https://css-pattern.com/ */
+/* h/t https://www.magicpattern.design/tools/css-backgrounds */
+
 .calendar-page-pattern-radial {
     background-color: var(--calendar_page_background-color-a);
-    opacity: 0.8;
     background-image:
         radial-gradient(circle at center center, var(--calendar_page_background-color-a), var(--calendar_page_background-color-b)),
         repeating-radial-gradient(circle at center center, var(--calendar_page_background-color-a), var(--calendar_page_background-color-b), var(--calendar_page_background-size), transparent calc(var(--calendar_page_background-size) * 2), transparent var(--calendar_page_background-size));
     background-blend-mode: multiply;
 }
 
+.calendar-page-pattern-circles {
+  --_gradient: 
+      var(--calendar_page_background-color-a) 0%  5%,
+      var(--calendar_page_background-color-b) 6%  15%,
+      var(--calendar_page_background-color-a) 16% 25%,
+      var(--calendar_page_background-color-b) 26% 35%,
+      var(--calendar_page_background-color-a) 36% 45%,
+      var(--calendar_page_background-color-b) 46% 55%,
+      var(--calendar_page_background-color-a) 56% 65%,
+      var(--calendar_page_background-color-b) 66% 75%,
+      var(--calendar_page_background-color-a) 76% 85%,
+      var(--calendar_page_background-color-b) 86% 95%,
+     #0000 96%;
+  background:
+    radial-gradient(50% 50% at 100% 0,var(--_gradient)),
+    radial-gradient(50% 50% at 0 100%,var(--_gradient)),
+    radial-gradient(50% 50%,var(--_gradient)),
+    radial-gradient(50% 50%,var(--_gradient))
+    calc(var(--calendar_page_background-size)/2) calc(var(--calendar_page_background-size)/2)
+    var(--calendar_page_background-color-a);
+  background-size: var(--calendar_page_background-size) var(--calendar_page_background-size);
+}
+
 .calendar-page-pattern-zigzag {
     background-color: var(--calendar_page_background-color-a);
-    opacity: 0.8;
     background-image:
         linear-gradient(135deg, var(--calendar_page_background-color-b) 25%, transparent 25%),
         linear-gradient(225deg, var(--calendar_page_background-color-b) 25%, transparent 25%),
@@ -106,7 +131,6 @@
 
 .calendar-page-pattern-diagonal {
     background-color: var(--calendar_page_background-color-a);
-    opacity: 0.8;
     background: repeating-linear-gradient(45deg,
             var(--calendar_page_background-color-b),
             var(--calendar_page_background-color-b) calc(var(--calendar_page_background-size) / 3),
@@ -116,7 +140,6 @@
 
 .calendar-page-pattern-isometric {
     background-color: var(--calendar_page_background-color-a);
-    opacity: 0.8;
     background-image:
         linear-gradient(30deg, var(--calendar_page_background-color-b) 12%, transparent 12.5%, transparent 87%, var(--calendar_page_background-color-b) 87.5%, var(--calendar_page_background-color-b)),
         linear-gradient(150deg, var(--calendar_page_background-color-b) 12%, transparent 12.5%, transparent 87%, var(--calendar_page_background-color-b) 87.5%, var(--calendar_page_background-color-b)),
@@ -133,14 +156,83 @@
         calc(var(--calendar_page_background-size) * 0.625) calc(var(--calendar_page_background-size) * 1.125);
 }
 
+.calendar-page-pattern-weave {
+  background:
+    conic-gradient(at 60% 60%, var(--calendar_page_background-color-a) 75%, #0000 0)
+     0 0/calc(5*var(--calendar_page_background-size)/2) calc(5*var(--calendar_page_background-size)/2),
+    repeating-conic-gradient(var(--calendar_page_background-color-a) 0 25%, #0000 0 50%)
+     0 0/calc(5*var(--calendar_page_background-size)) calc(5*var(--calendar_page_background-size)),
+    repeating-conic-gradient(var(--calendar_page_background-color-b) 0 25%, var(--calendar_page_background-color-a) 0 50%)
+     0 0/var(--calendar_page_background-size) var(--calendar_page_background-size);
+}
+
+.calendar-page-pattern-leafs {
+  --c: var(--calendar_page_background-color-a) 99%, #0000 101%;
+  background:
+    radial-gradient(var(--calendar_page_background-size) at 100% 100%, var(--c)),
+    radial-gradient(var(--calendar_page_background-size) at 100% 0, var(--c)) calc(3*var(--calendar_page_background-size)/2) 0,
+    radial-gradient(var(--calendar_page_background-size) at 0 100%, var(--c)) calc(var(--calendar_page_background-size)/2) 0,
+    radial-gradient(var(--calendar_page_background-size) at 0 0, var(--c)) calc(2*var(--calendar_page_background-size)) 0
+    var(--calendar_page_background-color-b);
+  background-size: calc(3*var(--calendar_page_background-size)) calc(5*var(--calendar_page_background-size)/2);
+}
+
+.calendar-page-pattern-square-weave {
+  --g: #0000 calc(125%/3), var(--calendar_page_background-color-a) 0 calc(175%/3), #0000 0;
+  --p: 0 0/calc(2*var(--calendar_page_background-size)) calc(2*var(--calendar_page_background-size));
+  background:
+    conic-gradient(#0000 75%, var(--calendar_page_background-color-a) 0) 
+     calc(3*var(--calendar_page_background-size)/4) calc(3*var(--calendar_page_background-size)/4)/var(--calendar_page_background-size) var(--calendar_page_background-size),
+    linear-gradient(45deg, var(--g)) var(--p),
+    linear-gradient(-45deg, var(--g)) var(--p) var(--calendar_page_background-color-b);
+}
+
+.calendar-page-pattern-houndstooth {
+  background:
+    conic-gradient(var(--calendar_page_background-color-a) 25%, #0000 0 50%, var(--calendar_page_background-color-b) 0 75%, #0000 0),
+    linear-gradient(135deg,
+      var(--calendar_page_background-color-a) 0 12.5%, var(--calendar_page_background-color-b) 0 25%,
+      var(--calendar_page_background-color-a) 0 37.5%, var(--calendar_page_background-color-b) 0 62.5%,
+      var(--calendar_page_background-color-a) 0 75%, var(--calendar_page_background-color-b) 0 87.5%,
+      var(--calendar_page_background-color-a) 0);
+  background-size: var(--calendar_page_background-size) var(--calendar_page_background-size);
+}
+
+.calendar-page-pattern-wobble {
+  --c: var(--calendar_page_background-color-a) 0;
+  --g: conic-gradient(at 50% 25%, #0000 75%, var(--c));
+  background:
+    repeating-linear-gradient(#0000 0 48%, var(--c) 50%), var(--g),
+    conic-gradient(#0000 75%, var(--c)) calc(var(--calendar_page_background-size)/4) calc(var(--calendar_page_background-size)/2),
+    var(--g) calc(var(--calendar_page_background-size)/2) var(--calendar_page_background-size) var(--calendar_page_background-color-b);
+  background-size: var(--calendar_page_background-size) var(--calendar_page_background-size),
+                  var(--calendar_page_background-size) calc(2*var(--calendar_page_background-size));
+}
+
+.calendar-page-pattern-xmas {
+  --_c: #0000, var(--calendar_page_background-color-a) 1deg 79deg, #0000 81deg;
+  --g0: conic-gradient(from 140deg at 50% 87.5%, var(--_c));
+  --g1: conic-gradient(from 140deg at 50% 81.25%, var(--_c));
+  --g2: conic-gradient(from 140deg at 50% 75%, var(--_c));
+  --g3: conic-gradient(at 10% 20%, #0000 75%, var(--calendar_page_background-color-a) 0);
+  background:
+    var(--g0) 0 calc(var(--calendar_page_background-size)/-4),
+    var(--g0) var(--calendar_page_background-size) calc(3*var(--calendar_page_background-size)/4),
+    var(--g1),
+    var(--g1) var(--calendar_page_background-size) var(--calendar_page_background-size),
+    var(--g2) 0 calc(var(--calendar_page_background-size)/4),
+    var(--g2) var(--calendar_page_background-size) calc(5*var(--calendar_page_background-size)/4),
+    var(--g3) calc(var(--calendar_page_background-size)/-10) var(--calendar_page_background-size),
+    var(--g3) calc(9*var(--calendar_page_background-size)/10) calc(2*var(--calendar_page_background-size)),
+    repeating-conic-gradient(from 45deg, var(--calendar_page_background-color-b) 0 25%, var(--calendar_page_background-color-c) 0 50%);
+  background-size: calc(2*var(--calendar_page_background-size)) calc(2*var(--calendar_page_background-size));
+}
+
 .page {
     display: flex;
     flex-direction: column;
     padding: var(--calendar_page_padding);
-
     color: var(--calendar_page_color);
-    background-color: var(--calendar_page_background-color-a);
-
     font-size: var(--calendar_page_font-size);
 }
 
@@ -294,6 +386,7 @@ h2.year {
 }
 
 .date_row>.col_content>.col_content_highlighted {
+    order: -1;
     color: var(--calendar_content-highlight_color);
     font-family: var(--calendar_content-highlight_font-family);
     font-weight: var(--calendar_content-highlight_font-weight);
