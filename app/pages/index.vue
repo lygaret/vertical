@@ -57,11 +57,18 @@ import { Button } from '@/components/ui/button';
 
   const cssPageColorA = bindVariable('--calendar_page_background-color-a');
   const cssPageColorB = bindVariable('--calendar_page_background-color-b');
+  const cssPageColorC = bindVariable('--calendar_page_background-color-c');
   const cssPagePatternSize = bindVariable(
     '--calendar_page_background-size',
     (value) => `${value}pt`,
     (value) => parseFloat(value)
   );
+
+  const cssDaygridBorderColor  = bindVariable('--calendar_daygrid_border-color');
+  const cssDaygridBorderWidth  = bindVariable('--calendar_daygrid_border-width', (value) => `${value}pt`, (value) => parseFloat(value));
+  const cssDaygridBorderRadius = bindVariable('--calendar_daygrid_border-radius', (value) => `${value}pt`, (value) => parseFloat(value));
+  const cssDaygridRowBackground = bindVariable('--calendar_row_background-color');
+  const cssDaygridWeekendBackground = bindVariable('--calendar_row-weekend_background-color');
 </script>
 
 <template>
@@ -129,6 +136,13 @@ import { Button } from '@/components/ui/button';
               type="color"
             />
           </Label>
+          <Label>
+            Background <small>Tertiary</small>
+            <Input
+              v-model="cssPageColorC"
+              type="color"
+            />
+          </Label>
           <Input
             v-model="cssPagePatternSize"
             type="range"
@@ -144,6 +158,29 @@ import { Button } from '@/components/ui/button';
         <SidebarGroup>
           <SidebarGroupLabel>Month</SidebarGroupLabel>
           <FontEditor prefix="calendar_month" />
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Day Grid</SidebarGroupLabel>
+          <Label>
+          Day Background
+          <Input v-model="cssDaygridRowBackground" type="color" />
+          </Label>
+          <Label>
+          Weekend Background
+          <Input v-model="cssDaygridWeekendBackground" type="color" />
+          </Label>
+          <Label>
+          Border Color
+          <Input v-model="cssDaygridBorderColor" type="color" />
+          </Label>
+          <Label>
+          Border Width
+          <Input v-model="cssDaygridBorderWidth" type="range" min="0" max="25" />
+          </Label>
+          <Label>
+          Border Radius
+          <Input v-model="cssDaygridBorderRadius" type="range" min="0" max="25" />
+          </Label>
         </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Day of Month</SidebarGroupLabel>
