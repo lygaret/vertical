@@ -63,7 +63,7 @@ import { Button } from '@/components/ui/button';
   </div>
   <SidebarProvider :class="cn($style.SidebarProvider, 'print:hidden')">
     <SidebarInset :class="cn($style.SidebarInset)">
-      <CalendarPage interactive class="h=[18in] min-h-[18in] w-full" />
+      <CalendarPage interactive class="h=[18in] min-h-[18in] max-w-[12in] w-full mx-auto shadow-lg" />
     </SidebarInset>
     <Sidebar
       side="right"
@@ -159,5 +159,19 @@ import { Button } from '@/components/ui/button';
 .SidebarInset {
     height: 100svh;
     overflow: auto;
+
+    background: -webkit-linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), -webkit-linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), white;
+    background: -moz-linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), -moz-linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), white;
+    background: linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), white;
+    background-repeat: repeat, repeat;
+    background-position: 0px 0, 10px 10px;
+    transform-origin: 0 0 0;
+    background-origin: padding-box, padding-box;
+    background-clip: border-box, border-box;
+    background-size: 20px 20px, 20px 20px;
+    box-shadow: none;
+    text-shadow: none;
+    transition: none;
+    transform: scaleX(1) scaleY(1) scaleZ(1);
 }
 </style>
