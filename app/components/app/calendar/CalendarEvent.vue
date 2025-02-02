@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Cross2Icon, Pencil2Icon, StarFilledIcon } from '@radix-icons/vue';
 import { useCalendarStore } from '@/stores/calendarStore';
 import { cn } from '@/lib/utils';
+import CalendarStyle from './CalendarStyle.module.css';
 
 const props = defineProps({
   class: {
@@ -44,8 +45,8 @@ function handleHighlight() {
   <div 
     :class="cn(
       'group relative flex items-center px-2 m-1 rounded-md hover:pr-[88px]',
-      $style.event,
-      props.event.highlighted && $style.highlighted,
+      CalendarStyle.col_content_event,
+      props.event.highlighted && CalendarStyle.col_content_highlighted,
       props.class,
     )"
     :style="eventStyle"
@@ -81,21 +82,3 @@ function handleHighlight() {
     </div>
   </div>
 </template>
-
-<style lang="css" module>
-  .event {
-      color: var(--calendar_content_color);
-      font-family: var(--calendar_content_font-family);
-      font-weight: var(--calendar_content_font-weight);
-      font-size: var(--calendar_content_font-size);
-      font-style: var(--calendar_content_font-style);
-  }
-
-  .highlighted {
-      color: var(--calendar_content-highlight_color);
-      font-family: var(--calendar_content-highlight_font-family);
-      font-weight: var(--calendar_content-highlight_font-weight);
-      font-size: var(--calendar_content-highlight_font-size);
-      font-style: var(--calendar_content-highlight_font-style);
-  }
-</style>
