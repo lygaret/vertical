@@ -61,6 +61,7 @@
             :key="event.id"
             :event="event"
           />
+          <span :class="$style.col_content_separator"></span>
         </div>
         <LocalEventTrigger
           v-if="props.interactive"
@@ -125,6 +126,12 @@
     --calendar_content_font-weight: normal;
     --calendar_content_font-style: normal;
     --calendar_content_color: var(--calendar_page_color);
+
+    --calendar_content-highlight_font-family: var(--calendar_content_font-family);
+    --calendar_content-highlight_font-size: var(--calendar_content_font-size);
+    --calendar_content-highlight_font-weight: var(--calendar_content_font-weight);
+    --calendar_content-highlight_font-style: var(--calendar_content_font-style);
+    --calendar_content-highlight_color: var(--calendar_content_color);
   }
 
   @page {
@@ -355,4 +362,11 @@
       font-size: var(--calendar_content_font-size);
       font-style: var(--calendar_content_font-style);
   }
+
+  .date_row > .col_content > .col_content_separator {
+      flex: 1 1 100%;
+      order: -1;
+      display: inline-block;
+  }
+
 </style>

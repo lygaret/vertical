@@ -139,6 +139,10 @@ import { Button } from '@/components/ui/button';
           <FontEditor prefix="calendar_day-of-week" />
         </SidebarGroup>
         <SidebarGroup>
+          <SidebarGroupLabel>Highlighted Events</SidebarGroupLabel>
+          <FontEditor prefix="calendar_content-highlight" />
+        </SidebarGroup>
+        <SidebarGroup>
           <SidebarGroupLabel>Event Content</SidebarGroupLabel>
           <FontEditor prefix="calendar_content" />
         </SidebarGroup>

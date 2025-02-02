@@ -133,7 +133,7 @@ function* expandRecurrencesFor(event, calendar, month, year) {
         ...oevent,
         startDate: occurrence.startDate.toJSDate(),
         endDate: occurrence.endDate.toJSDate(),
-        recurrenceUid: oevent.uid,
+        recurrenceUid: occurrence.recurrenceId.toUnixTime(),
         itercount,
       }
     }
@@ -149,15 +149,18 @@ function* expandRecurrencesFor(event, calendar, month, year) {
 export const useCalendarStore = defineStore('calendarStore', () => {
   const today = new Date()
 
-  const currentMonth    = ref(today.getMonth())
-  const currentYear     = ref(today.getFullYear())
+  const currentMonth = ref(today.getMonth())
+  const currentYear = ref(today.getFullYear())
   const currentCacheKey = computed(() => `${currentMonth.value}-${currentYear.value}`)
 
-  const localEvents     = ref(new Map())
-  const icsCalendars    = ref(new Map())
+  const localEvents = ref(new Map())
+  const icsCalendars = ref(new Map())
 
-  const expandedCache   = new Map()
-  const expandedEvents  = computed(() => {
+  const highlightedEvents = ref(new Set())
+  const hiddenEvents = ref(new Set())
+
+  const expandedCache = new Map()
+  const expandedEvents = computed(() => {
     if (!expandedCache.has(currentCacheKey.value)) {
       const events = new Set()
       for (const calendar of icsCalendars.value.values()) {
@@ -178,18 +181,24 @@ export const useCalendarStore = defineStore('calendarStore', () => {
   const currentEvents = computed(() => {
     const result = {}
     const mstart = new Date(currentYear.value, currentMonth.value, 1)
-    const mend   = new Date(currentYear.value, currentMonth.value + 1, 0)
-    
+    const mend = new Date(currentYear.value, currentMonth.value + 1, 0)
+
     for (const event of [...localEvents.value.values(), ...expandedEvents.value.values()]) {
       if (event.endDate < mstart || event.startDate > mend)
         continue;
 
+      if (hiddenEvents.value.has(event.uid) || hiddenEvents.value.has(instanceUid(event)))
+        continue;
+
       const startDay = event.startDate < mstart ? 1 : event.startDate.getDate()
-      const endDay   = event.endDate > mend     ? mend.getDate() : event.endDate.getDate()
+      const endDay = event.endDate > mend ? mend.getDate() : event.endDate.getDate()
 
       for (let day = startDay; day <= endDay; day++) {
         result[day] = result[day] || []
-        result[day].push(event)
+        result[day].push({
+          ...event,
+          highlighted: highlightedEvents.value.has(event.uid)
+        })
       }
     }
 
@@ -201,7 +210,7 @@ export const useCalendarStore = defineStore('calendarStore', () => {
     const days = [];
 
     const events = currentEvents.value;
-    for (let day = 1; ;day++) {
+    for (let day = 1; ; day++) {
       const date = new Date(currentYear.value, currentMonth.value, day);
       if (date >= last)
         break;
@@ -212,13 +221,46 @@ export const useCalendarStore = defineStore('calendarStore', () => {
     return days;
   })
 
+  function instanceUid(event) {
+    if (event.recurrenceUid) {
+      return `${event.uid}-${event.recurrenceUid}`
+    }
+
+    return event.uid;
+  }
+
+  function removeEvent(event, all = false) {
+    if (event.type == 'local')
+      return removeLocalEvent(event)
+
+    hideEvent(event, true, all)
+  }
+
+  function hideEvent(event, state, all = false) {
+    const id = all ? event.uid : instanceUid(event)
+
+    if (state) {
+      hiddenEvents.value.add(id)
+    } else {
+      hiddenEvents.value.delete(id)
+    }
+  }
+
+  function highlightEvent(event, state) {
+    if (state) {
+      highlightedEvents.value.add(event.uid);
+    } else {
+      highlightedEvents.value.delete(event.uid);
+    }
+  }
+
   function createLocalEvent(event) {
     const uid = makeInternalUid("local-event");
     localEvents.value.set(uid, { ...event, uid, type: 'local' });
   }
 
-  function removeLocalEvent(uid) {
-    localEvents.value.delete(uid);
+  function removeLocalEvent(event) {
+    localEvents.value.delete(event.uid);
   }
 
   async function importICSFile(file) {
@@ -255,13 +297,22 @@ export const useCalendarStore = defineStore('calendarStore', () => {
 
     createLocalEvent,
     removeLocalEvent,
+
     previewICSFile,
     importICSFile,
+
+    highlightEvent,
+    highlightedEvents,
+
+    hideEvent,
+    hiddenEvents,
+
+    removeEvent
   }
 }, {
   persist: {
     debug: true,
-    pick: ["icsCalendars", "localEvents", "currentMonth", "currentYear"],
+    pick: ["icsCalendars", "localEvents", "currentMonth", "currentYear", "hiddenEvents", "highlightedEvents"],
     serializer: {
       deserialize: input => {
         const res = JSBT.decode(input)
@@ -276,14 +327,7 @@ export const useCalendarStore = defineStore('calendarStore', () => {
         return { ...res, icsCalendars }
       },
       serialize: data => {
-        const raw = {
-          icsCalendars: toRaw(data.icsCalendars),
-          localEvents: toRaw(data.localEvents),
-          currentMonth: toRaw(data.currentMonth),
-          currentYear: toRaw(data.currentYear),
-        }
-
-        return JSBT.encode(raw)
+        return JSBT.encode(toRaw(data))
       }
     }
   }
