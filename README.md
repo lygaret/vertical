@@ -74,4 +74,6 @@ UI components based on [shadcn/ui](https://ui.shadcn.com/) + [Radix Vue](https:/
 
 ## License
 
-[License here]
+[MIT License](./LICENSE)
+
+Copyright Jonathan Raphaelson, 2025
