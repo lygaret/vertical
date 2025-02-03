@@ -1,9 +1,5 @@
 import fastify from 'fastify'
 import fastifyVite from '@fastify/vite'
-
-import fastifySession from '@fastify/session'
-import fastifyCookie from '@fastify/cookie'
-import fastifyFormbody from '@fastify/formbody'
 import fastifyCompress from '@fastify/compress'
 
 async function loadLocalFonts() {
@@ -48,9 +44,6 @@ server.decorate('googleFonts', await loadGoogleFonts())
 server.decorate('defaultFonts', await loadLocalFonts())
 
 server.register(fastifyCompress)
-server.register(fastifyFormbody)
-server.register(fastifyCookie)
-server.register(fastifySession, { secret: "a secret with minimum length of 31 characters" })
 
 await server.register(fastifyVite, {
   root: import.meta.url,
