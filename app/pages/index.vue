@@ -18,6 +18,7 @@
 
   import { BrandBadge } from '@/components/app';
   import { CalendarPage, ImportICSSidebarGroup, MonthSelectorSidebarGroup } from '@/components/app/calendar';
+  import { PagePatternOptions } from '@/components/app/calendar/styles';
   import { FontEditor } from '@/components/app/editor';
 
   const calendarStore = useCalendarStore();
@@ -41,23 +42,7 @@
     window.removeEventListener('afterprint', afterPrint);
   });
 
-  const cssPagePatternOptions = [
-    { value: "solid", label: "Solid" },
-    { value: "radial", label: "Radial" },
-    { value: "circles", label: "Circles" },
-    { value: "zigzag", label: "Zig Zag" },
-    { value: "weave", label: "Weave" },
-    { value: "square-weave", label: "Square Weave" },
-    { value: "houndstooth", label: "Houndstooth" },
-    { value: "leafs", label: "Leafs" },
-    { value: "diagonal", label: "Diagonal" },
-    { value: "isometric", label: "Isometric" },
-    { value: "wobble", label: "Wobble" },
-    { value: "xmas", label: "Xmas" },
-  ];
-
   const cssPagePattern = bindVariable('--calendar_page_background-pattern');
-
   const cssPageColorA = bindVariable('--calendar_page_background-color-a');
   const cssPageColorB = bindVariable('--calendar_page_background-color-b');
   const cssPageColorC = bindVariable('--calendar_page_background-color-c');
@@ -118,7 +103,7 @@
               <SelectContent>
                 <SelectGroup>
                   <SelectItem
-                    v-for="pattern of cssPagePatternOptions"
+                    v-for="pattern of PagePatternOptions"
                     :key="pattern.value"
                     :value="pattern.value"
                   >
