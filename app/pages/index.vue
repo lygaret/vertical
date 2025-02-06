@@ -24,7 +24,7 @@
   const calendarStore = useCalendarStore();
   const cssVariablesStore = useCssVariables();
 
-  const { bindVariable } = cssVariablesStore;
+  const { bindVariable, bindVariableFloat } = cssVariablesStore;
 
   const isPrinting = ref(true);
   function beforePrint() {
@@ -46,15 +46,16 @@
   const cssPageColorA = bindVariable('--calendar_page_background-color-a');
   const cssPageColorB = bindVariable('--calendar_page_background-color-b');
   const cssPageColorC = bindVariable('--calendar_page_background-color-c');
-  const cssPagePatternSize = bindVariable(
-    '--calendar_page_background-size',
-    (value) => `${value}pt`,
-    (value) => parseFloat(value)
-  );
+  const cssPagePatternSize = bindVariableFloat('--calendar_page_background-size', 'pt')
+
+  const cssPagePaddingTop = bindVariableFloat('--calendar_page_padding-top', 'pt')
+  const cssPagePaddingBottom = bindVariableFloat('--calendar_page_padding-bottom', 'pt')
+  const cssPagePaddingRight = bindVariableFloat('--calendar_page_padding-right', 'pt')
+  const cssPagePaddingLeft = bindVariableFloat('--calendar_page_padding-left', 'pt')
 
   const cssDaygridBorderColor  = bindVariable('--calendar_daygrid_border-color');
-  const cssDaygridBorderWidth  = bindVariable('--calendar_daygrid_border-width', (value) => `${value}pt`, (value) => parseFloat(value));
-  const cssDaygridBorderRadius = bindVariable('--calendar_daygrid_border-radius', (value) => `${value}pt`, (value) => parseFloat(value));
+  const cssDaygridBorderWidth  = bindVariableFloat('--calendar_daygrid_border-width', 'pt');
+  const cssDaygridBorderRadius = bindVariableFloat('--calendar_daygrid_border-radius', 'pt');
   const cssDaygridRowBackground = bindVariable('--calendar_row_background-color');
   const cssDaygridWeekendBackground = bindVariable('--calendar_row-weekend_background-color');
 </script>
@@ -88,7 +89,10 @@
           <Button @click="cssVariablesStore.clearStore()">
             Reset Theme
           </Button>
-          <Button variant="destructive" @click="calendarStore.resetStore(true)">
+          <Button
+            variant="destructive"
+            @click="calendarStore.resetStore(true)"
+          >
             Reset Calendar
           </Button>
         </SidebarGroup>
@@ -141,6 +145,37 @@
             max="100"
             step="1"
           />
+          <Label>
+            Page Padding (Top/Right/Bottom/Left)
+            <Input
+              v-model="cssPagePaddingTop"
+              class="w-full"
+              type="range"
+              min="1"
+              max="96"
+            />
+            <Input
+              v-model="cssPagePaddingRight"
+              class="w-full"
+              type="range"
+              min="1"
+              max="96"
+            />
+            <Input
+              v-model="cssPagePaddingBottom"
+              class="w-full"
+              type="range"
+              min="1"
+              max="96"
+            />
+            <Input
+              v-model="cssPagePaddingLeft"
+              class="w-full"
+              type="range"
+              min="1"
+              max="96"
+            />
+          </Label>
         </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Year</SidebarGroupLabel>
@@ -153,24 +188,43 @@
         <SidebarGroup>
           <SidebarGroupLabel>Day Grid</SidebarGroupLabel>
           <Label>
-          Day Background
-          <Input v-model="cssDaygridRowBackground" type="color" />
+            Day Background
+            <Input
+              v-model="cssDaygridRowBackground"
+              type="color"
+            />
           </Label>
           <Label>
-          Weekend Background
-          <Input v-model="cssDaygridWeekendBackground" type="color" />
+            Weekend Background
+            <Input
+              v-model="cssDaygridWeekendBackground"
+              type="color"
+            />
           </Label>
           <Label>
-          Border Color
-          <Input v-model="cssDaygridBorderColor" type="color" />
+            Border Color
+            <Input
+              v-model="cssDaygridBorderColor"
+              type="color"
+            />
           </Label>
           <Label>
-          Border Width
-          <Input v-model="cssDaygridBorderWidth" type="range" min="0" max="25" />
+            Border Width
+            <Input
+              v-model="cssDaygridBorderWidth"
+              type="range"
+              min="0"
+              max="25"
+            />
           </Label>
           <Label>
-          Border Radius
-          <Input v-model="cssDaygridBorderRadius" type="range" min="0" max="25" />
+            Border Radius
+            <Input
+              v-model="cssDaygridBorderRadius"
+              type="range"
+              min="0"
+              max="25"
+            />
           </Label>
         </SidebarGroup>
         <SidebarGroup>
@@ -203,8 +257,6 @@
     height: 100svh;
     overflow: auto;
 
-    background: -webkit-linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), -webkit-linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), white;
-    background: -moz-linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), -moz-linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), white;
     background: linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), white;
     background-repeat: repeat, repeat;
     background-position: 0px 0, 10px 10px;

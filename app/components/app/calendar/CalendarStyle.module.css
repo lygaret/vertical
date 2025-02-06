@@ -6,7 +6,15 @@
     --calendar_page_background-color-c: #9999ff;
     --calendar_page_background-size: 64pt;
     --calendar_page_font-size: 14pt;
-    --calendar_page_padding: 1em 2em;
+    --calendar_page_padding-top: 32pt;
+    --calendar_page_padding-bottom: 64pt;
+    --calendar_page_padding-right: 40pt;
+    --calendar_page_padding-left: 40pt;
+    --calendar_page_padding:
+        var(--calendar_page_padding-top)
+        var(--calendar_page_padding-right)
+        var(--calendar_page_padding-bottom)
+        var(--calendar_page_padding-left);
 
     --calendar_year_font-family: sans-serif;
     --calendar_year_font-size: 20pt;

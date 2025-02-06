@@ -24,6 +24,14 @@ export const useCssVariables = defineStore('cssVariablesStore', () => {
     return comp;
   }
 
+  function bindVariableFloat(key, unit) {
+    return bindVariable(
+      key,
+      (value) => `${value}${unit}`,
+      (value) => parseFloat(value)
+    )
+  }
+
   function setVariable(key, value) {
     variables.value[key] = value
   }
@@ -63,6 +71,7 @@ export const useCssVariables = defineStore('cssVariablesStore', () => {
   return {
     variables,
     bindVariable,
+    bindVariableFloat,
     setVariable,
     readVariable,
     clearVariable,
