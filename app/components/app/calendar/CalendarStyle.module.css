@@ -111,12 +111,12 @@
       var(--calendar_page_background-color-b) 66% 75%,
       var(--calendar_page_background-color-a) 76% 85%,
       var(--calendar_page_background-color-b) 86% 95%,
-     #0000 96%;
+      #0000 96%;
   background:
-    radial-gradient(50% 50% at 100% 0,var(--_gradient)),
-    radial-gradient(50% 50% at 0 100%,var(--_gradient)),
-    radial-gradient(50% 50%,var(--_gradient)),
-    radial-gradient(50% 50%,var(--_gradient))
+    radial-gradient(50% 50% at 100% 0, var(--_gradient)),
+    radial-gradient(50% 50% at 0 100%, var(--_gradient)),
+    radial-gradient(50% 50% at 50% 50%, var(--_gradient)),
+    radial-gradient(50% 50% at 50% 50%, var(--_gradient))
     calc(var(--calendar_page_background-size)/2) calc(var(--calendar_page_background-size)/2)
     var(--calendar_page_background-color-a);
   background-size: var(--calendar_page_background-size) var(--calendar_page_background-size);
