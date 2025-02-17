@@ -284,6 +284,11 @@ export const useCalendarStore = defineStore('calendarStore', () => {
     }
   }
 
+  async function removeICSFile(calendar) {
+    expandedCache.clear();
+    icsCalendars.value.delete(calendar.id);
+  }
+
   function resetStore(hard = false) {
     hiddenEvents.value.clear()
     highlightedEvents.value.clear()
@@ -311,6 +316,7 @@ export const useCalendarStore = defineStore('calendarStore', () => {
 
     previewICSFile,
     importICSFile,
+    removeICSFile,
 
     highlightEvent,
     highlightedEvents,

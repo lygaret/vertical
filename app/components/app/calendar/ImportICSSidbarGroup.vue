@@ -39,5 +39,13 @@ async function importFile() {
         Import
       </Button>
     </div>
+    <ul>
+      <li v-for="cal of store.icsCalendars.values()" :key="cal.id">
+        {{ cal.name }}
+        <Button size="xs" @click="store.removeICSFile(cal)">
+          Remove
+        </Button>
+      </li>
+    </ul>
   </SidebarGroup>
 </template>
