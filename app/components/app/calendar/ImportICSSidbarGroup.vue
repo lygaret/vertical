@@ -6,46 +6,29 @@ import { Input } from '@/components/ui/input';
 
 import { SidebarGroup, SidebarGroupLabel } from '@/components/ui/sidebar';
 import { useCalendarStore } from '@/stores/calendarStore';
+import Uploader from '../uploader/Uploader.vue';
 
 const store = useCalendarStore();
 
-const calFile = ref(null)
-
-async function readFile(event) {
-  calFile.value = event.currentTarget.files[0];
-}
-
-async function importFile() {
-    if (calFile.value == null)
-        throw "no file selected";
-    
-  await store.importICSFile(calFile.value);
+async function importFiles(files) {
+    for (let file of files) {
+        await store.importICSFile(file);
+    }
 }
 </script>
 
 <template>
   <SidebarGroup>
     <SidebarGroupLabel>Import ICS</SidebarGroupLabel>
-    <div class="flex flex-col space-y-2 items-end">
-      <Input
-        type="file"
-        accepts=".ics"
-        @change="readFile($event)"
-      />
-      <Button
-        size="sm"
-        @click="importFile()"
-      >
-        Import
-      </Button>
-    </div>
-    <ul>
-      <li v-for="cal of store.icsCalendars.values()" :key="cal.id">
-        {{ cal.name }}
-        <Button size="xs" @click="store.removeICSFile(cal)">
-          Remove
-        </Button>
-      </li>
-    </ul>
+    <Uploader accepts=".ics" multiple @selected="importFiles($event)">
+      <ul>
+        <li v-for="cal of store.icsCalendars.values()" :key="cal.id" class="flex flex-row justify-between items-center">
+          {{ cal.name }}
+          <Button size="xs" @click.prevent="store.removeICSFile(cal)">
+            Remove
+          </Button>
+        </li>
+      </ul>
+    </Uploader>
   </SidebarGroup>
 </template>
