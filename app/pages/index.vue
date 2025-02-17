@@ -20,6 +20,7 @@
   import { CalendarPage, ImportICSSidebarGroup, MonthSelectorSidebarGroup } from '@/components/app/calendar';
   import { PagePatternOptions } from '@/components/app/calendar/styles';
   import { FontEditor } from '@/components/app/editor';
+  import { Checkbox } from '@/components/ui/checkbox';
 
   const calendarStore = useCalendarStore();
   const cssVariablesStore = useCssVariables();
@@ -58,6 +59,18 @@
   const cssDaygridBorderRadius = bindVariableFloat('--calendar_daygrid_border-radius', 'pt');
   const cssDaygridRowBackground = bindVariable('--calendar_row_background-color');
   const cssDaygridWeekendBackground = bindVariable('--calendar_row-weekend_background-color');
+
+  const cssDayMonthVisible = bindVariable(
+    '--calendar_day-of-month_display',
+    (value) => value ? 'inline' : 'none',
+    (value) => value !== 'none'
+  )
+  const cssDayWeekVisible = bindVariable(
+    '--calendar_day-of-week_display',
+    (value) => value ? 'inline' : 'none',
+    (value) => value !== 'none'
+  )
+
 </script>
 
 <template>
@@ -229,10 +242,12 @@
         </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Day of Month</SidebarGroupLabel>
+          <Checkbox v-model:checked="cssDayMonthVisible" />
           <FontEditor prefix="calendar_day-of-month" />
         </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Day of Week</SidebarGroupLabel>
+          <Checkbox v-model:checked="cssDayWeekVisible" />
           <FontEditor prefix="calendar_day-of-week" />
         </SidebarGroup>
         <SidebarGroup>

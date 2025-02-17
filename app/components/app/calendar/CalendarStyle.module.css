@@ -43,12 +43,14 @@
     --calendar_row-weekend_color: inherit;
     --calendar_row-weekend_background-color: #eeeeff;
 
+    --calendar-day-of-month_display: inline;
     --calendar_day-of-month_font-family: sans-serif;
     --calendar_day-of-month_font-size: 14pt;
     --calendar_day-of-month_font-weight: bold;
     --calendar_day-of-month_font-style: normal;
     --calendar_day-of-month_color: var(--calendar_page_color);
 
+    --calendar-day-of-week_display: inline;
     --calendar_day-of-week_font-family: sans-serif;
     --calendar_day-of-week_font-size: 14pt;
     --calendar_day-of-week_font-weight: normal;
@@ -90,6 +92,10 @@
 
 /* h/t https://css-pattern.com/ */
 /* h/t https://www.magicpattern.design/tools/css-backgrounds */
+
+.calendar-page-pattern-solid {
+    background-color: var(--calendar_page_background-color-a);
+}
 
 .calendar-page-pattern-radial {
     background-color: var(--calendar_page_background-color-a);
@@ -339,7 +345,7 @@ h2.year {
 
 .date_row>.col_date {
     flex: 0 0 2em;
-    margin-right: 1em;
+    display: var(--calendar_day-of-month_display);
 
     color: var(--calendar_day-of-month_color);
     font-family: var(--calendar_day-of-month_font-family);
@@ -352,6 +358,8 @@ h2.year {
 
 .date_row>.col_weekday {
     flex: 0 0 6em;
+    display: var(--calendar_day-of-week_display);
+    margin-left: 1em;
 
     color: var(--calendar_day-of-week_color);
     font-family: var(--calendar_day-of-week_font-family);
