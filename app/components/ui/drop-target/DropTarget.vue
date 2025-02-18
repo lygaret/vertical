@@ -4,6 +4,7 @@ import { ref, defineProps, defineEmits } from 'vue'
 
 // Define props
 const props = defineProps({
+    label:     { type: String },
     accept:    { type: String },
     disabled:  { type: Boolean, default: false },
     multiple:  { type: Boolean, default: false },
@@ -72,11 +73,15 @@ const handleDragOver = (event) => {
       @change="handleFileChange"
     />
 
-    <div :class="['flex flex-col justify-center items-center space-y-2', props.cloudClassName]">
+    <div :class="['w-full flex flex-col justify-center items-center space-y-2', props.cloudClassName]">
       <CloudUploadIcon size="4em" class="m-2 pointer-events-none" />
-      <div @click.stop>
-        <small class="inline-block mb-3 pb-1 border-b">Upload some ICS files, or click to select.</small>
-        <slot></slot>
+      <div class="w-full flex flex-col justify-center items-center">
+        <small>
+          <slot name="label">{{ props.label }}</slot>
+        </small>
+        <div class="w-full" @click.stop>
+          <slot></slot>
+        </div>
       </div>
     </div>
   </div>

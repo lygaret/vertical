@@ -3,10 +3,11 @@ import { ref } from 'vue';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { DropTarget } from '@/components/ui/drop-target';
 
 import { SidebarGroup, SidebarGroupLabel } from '@/components/ui/sidebar';
 import { useCalendarStore } from '@/stores/calendarStore';
-import Uploader from '../uploader/Uploader.vue';
+import { TrashIcon } from 'lucide-vue-next';
 
 const store = useCalendarStore();
 
@@ -20,15 +21,20 @@ async function importFiles(files) {
 <template>
   <SidebarGroup>
     <SidebarGroupLabel>Import ICS</SidebarGroupLabel>
-    <Uploader accepts=".ics" multiple @selected="importFiles($event)">
-      <ul>
+    <DropTarget multiple accepts=".ics" @selected="importFiles($event)">
+      <template v-slot:label>
+        drop <code>.ics</code> files, or click to select.
+      </template>
+      <ul v-if="store.icsCalendars.size > 0" class="mt-3 pt-3 border-t space-y-2">
         <li v-for="cal of store.icsCalendars.values()" :key="cal.id" class="flex flex-row justify-between items-center">
-          {{ cal.name }}
-          <Button size="xs" @click.prevent="store.removeICSFile(cal)">
-            Remove
+          <small class="truncate">
+            {{ cal.name }}
+          </small>
+          <Button size="icon" variant="ghost" class="text-destructive hover:bg-destructive hover:text-destructive-foreground h-6 w-6" @click.prevent="store.removeICSFile(cal)">
+            <TrashIcon class="h-4 w-4" />
           </Button>
         </li>
       </ul>
-    </Uploader>
+    </DropTarget>
   </SidebarGroup>
 </template>
