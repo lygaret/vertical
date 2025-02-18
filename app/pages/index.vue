@@ -14,12 +14,14 @@
   import { Input } from '@/components/ui/input';
   import { Label } from '@/components/ui/label';
   import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-  import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+  import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
   import { BrandBadge } from '@/components/app';
-  import { CalendarPage, ImportICSSidebarGroup, MonthSelectorSidebarGroup } from '@/components/app/calendar';
+  import { CalendarPage } from '@/components/app/calendar';
+
   import { PagePatternOptions } from '@/components/app/calendar/styles';
   import { FontEditor } from '@/components/app/editor';
+  import { BetaWarningSidebarGroup, ImportICSSidebarGroup, MonthSelectorSidebarGroup } from '@/components/app/sidebar';
   import { Checkbox } from '@/components/ui/checkbox';
 
   const calendarStore = useCalendarStore();
@@ -91,24 +93,13 @@
       side="right"
       class="print:hidden"
     >
-      <SidebarHeader>
+      <SidebarHeader class="flex flex-row-reverse items-start justify-between">
         <BrandBadge />
       </SidebarHeader>
       <SidebarContent>
         <MonthSelectorSidebarGroup />
         <ImportICSSidebarGroup />
         <hr>
-        <SidebarGroup>
-          <Button @click="cssVariablesStore.clearStore()">
-            Reset Theme
-          </Button>
-          <Button
-            variant="destructive"
-            @click="calendarStore.resetStore(true)"
-          >
-            Reset Calendar
-          </Button>
-        </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Page</SidebarGroupLabel>
           <Label>
@@ -259,6 +250,9 @@
           <FontEditor prefix="calendar_content" />
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter class="p-0">
+        <BetaWarningSidebarGroup />
+      </SidebarFooter>
     </Sidebar>
   </SidebarProvider>
 </template>

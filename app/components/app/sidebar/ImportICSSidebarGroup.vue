@@ -1,13 +1,11 @@
 <script setup>
-import { ref } from 'vue';
+import { TrashIcon } from 'lucide-vue-next';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { DropTarget } from '@/components/ui/drop-target';
-
 import { SidebarGroup, SidebarGroupLabel } from '@/components/ui/sidebar';
+
 import { useCalendarStore } from '@/stores/calendarStore';
-import { TrashIcon } from 'lucide-vue-next';
 
 const store = useCalendarStore();
 
